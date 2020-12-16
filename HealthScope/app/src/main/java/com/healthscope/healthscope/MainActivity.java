@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        synchronizeData = findViewById(R.id.synchronizeData);
+
         //This code check if the user device allows Bluetooth
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
@@ -67,10 +69,12 @@ public class MainActivity extends AppCompatActivity {
             }
             if (!devices.contains("HC06")) {
                 Toast.makeText(this, "Not connected to HC06", Toast.LENGTH_SHORT).show();
+                synchronizeData.setEnabled(false);
             }
 
         } else {
             Toast.makeText(this, "Please pair a device", Toast.LENGTH_SHORT).show();
+            synchronizeData.setEnabled(false);
         }
 
         //Trying to establish a specific socket connection to the hc06 module
@@ -100,11 +104,11 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             Log.d(TAG, "onCreate: mUUID null");
+            synchronizeData.setEnabled(false);
         }
 
 
         //Button code
-        synchronizeData = findViewById(R.id.synchronizeData);
         synchronizeData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
