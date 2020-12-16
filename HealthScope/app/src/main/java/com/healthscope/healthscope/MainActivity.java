@@ -7,6 +7,8 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Bluetooth Code";
     public BluetoothDevice hc06;
     public BluetoothAdapter bluetoothAdapter;
+    Button synchronizeData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,5 +65,14 @@ public class MainActivity extends AppCompatActivity {
         } else{
             Toast.makeText(this, "Please pair a device", Toast.LENGTH_SHORT).show();
         }
+
+        //Button code
+        synchronizeData = findViewById(R.id.synchronizeData);
+        synchronizeData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SynchronizedDataActivity.class));
+            }
+        });
     }
 }

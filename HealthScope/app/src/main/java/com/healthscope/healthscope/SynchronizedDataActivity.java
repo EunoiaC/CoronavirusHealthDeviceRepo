@@ -10,5 +10,8 @@ public class SynchronizedDataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_synchronized_data);
+
+        LoadingDialog loadingDialog = new LoadingDialog(SynchronizedDataActivity.this);
+        loadingDialog.starLoadingAlertDialog();
     }
 }
