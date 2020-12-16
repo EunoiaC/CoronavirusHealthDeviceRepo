@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         } else{
-            synchronizeData.setEnabled(true);
+            //synchronizeData.setEnabled(true);
         }
 
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
@@ -71,12 +71,12 @@ public class MainActivity extends AppCompatActivity {
             }
             if (!devices.contains("HC06")) {
                 Toast.makeText(this, "Not connected to HC06", Toast.LENGTH_SHORT).show();
-                synchronizeData.setEnabled(false);
+                //synchronizeData.setEnabled(false);
             }
 
         } else {
             Toast.makeText(this, "Please pair a device", Toast.LENGTH_SHORT).show();
-            synchronizeData.setEnabled(false);
+            //synchronizeData.setEnabled(false);
         }
 
         //Trying to establish a specific socket connection to the hc06 module
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             Log.d(TAG, "onCreate: mUUID null");
-            synchronizeData.setEnabled(false);
+            //synchronizeData.setEnabled(false);
         }
 
         //Checks if bluetooth went from disabled to enabled
