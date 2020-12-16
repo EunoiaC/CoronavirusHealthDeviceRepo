@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
 
+        ArrayList devices = new ArrayList<String>();
         if (pairedDevices.size() > 0) {
             // There are paired devices. Get the name and address of each paired device.
-            ArrayList devices = new ArrayList<String>();
             for (BluetoothDevice device : pairedDevices) {
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
@@ -72,29 +72,33 @@ public class MainActivity extends AppCompatActivity {
         } else{
             Toast.makeText(this, "Please pair a device", Toast.LENGTH_SHORT).show();
         }
+        
+        if (mUUID != null){
+            //Trying to establish a specific socket connection to the hc06 module
+            int counter = 0;
+            BluetoothSocket bluetoothSocket = null;
 
-        //Trying to establish a specific socket connection to the hc06 module
-        int counter = 0;
-        BluetoothSocket bluetoothSocket = null;
+            do {
+                try {
+                    bluetoothSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
+                    Log.d(TAG, "onCreate: " + bluetoothSocket);
+                    bluetoothSocket.connect();
+                    Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Error establishing direct connection to hc06", Toast.LENGTH_SHORT).show();
+                }
+                counter++;
+            }while (!bluetoothSocket.isConnected() && counter < 3);
 
-        do {
             try {
-                bluetoothSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
-                Log.d(TAG, "onCreate: " + bluetoothSocket);
-                bluetoothSocket.connect();
+                bluetoothSocket.close();
                 Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
-            } catch (IOException e) {
+            }catch (Exception e){
                 e.printStackTrace();
-                Toast.makeText(this, "Error establishing direct connection to hc06", Toast.LENGTH_SHORT).show();
             }
-            counter++;
-        }while (!bluetoothSocket.isConnected() && counter < 3);
-
-        try {
-            bluetoothSocket.close();
-            Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
-        }catch (Exception e){
-            e.printStackTrace();
+        } else{
+            Log.d(TAG, "onCreate: mUUID null");
         }
 
 
