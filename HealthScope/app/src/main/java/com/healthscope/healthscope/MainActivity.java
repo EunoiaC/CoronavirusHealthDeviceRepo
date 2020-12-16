@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +12,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+    //UUID for the hc06 module
+    public static UUID mUUID;
 
     //Request code for enabling bluetooth. The value doesn't matter. It could be 1 or a million.
     private static final int REQUEST_ENABLE_BT = 1;
@@ -54,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 if (deviceName.equals("HC06")){
                     //Connection specific to hc06 module
                     hc06 = bluetoothAdapter.getRemoteDevice(deviceHardwareAddress);
+                    //Setting mUUID to the mac address of hc06
+                    mUUID = UUID.fromString(deviceHardwareAddress);
                     Toast.makeText(this, "Connected to " + hc06.getName(), Toast.LENGTH_SHORT).show();
                     break;
                 }
@@ -65,6 +72,31 @@ public class MainActivity extends AppCompatActivity {
         } else{
             Toast.makeText(this, "Please pair a device", Toast.LENGTH_SHORT).show();
         }
+
+        //Trying to establish a specific socket connection to the hc06 module
+        int counter = 0;
+        BluetoothSocket bluetoothSocket = null;
+
+        do {
+            try {
+                bluetoothSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
+                Log.d(TAG, "onCreate: " + bluetoothSocket);
+                bluetoothSocket.connect();
+                Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error establishing direct connection to hc06", Toast.LENGTH_SHORT).show();
+            }
+            counter++;
+        }while (!bluetoothSocket.isConnected() && counter < 3);
+
+        try {
+            bluetoothSocket.close();
+            Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
         //Button code
         synchronizeData = findViewById(R.id.synchronizeData);
