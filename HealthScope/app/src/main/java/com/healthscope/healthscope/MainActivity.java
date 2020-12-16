@@ -72,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
         } else{
             Toast.makeText(this, "Please pair a device", Toast.LENGTH_SHORT).show();
         }
-        
+
+        //Trying to establish a specific socket connection to the hc06 module
         if (mUUID != null){
-            //Trying to establish a specific socket connection to the hc06 module
             int counter = 0;
             BluetoothSocket bluetoothSocket = null;
 
