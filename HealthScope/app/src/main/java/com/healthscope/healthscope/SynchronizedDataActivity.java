@@ -83,7 +83,7 @@ public class SynchronizedDataActivity extends AppCompatActivity {
                     Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Error establishing direct connection to hc06", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error establishing server connection to hc06", Toast.LENGTH_SHORT).show();
                 }
                 counter++;
             } while (!bluetoothSocket.isConnected() && counter < 3);
