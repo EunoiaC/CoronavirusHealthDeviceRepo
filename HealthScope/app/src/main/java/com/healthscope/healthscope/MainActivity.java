@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 String deviceHardwareAddress = device.getAddress(); // MAC address
                 Log.d(TAG, "onCreate: " + deviceName);
                 devices.add(deviceName);
-                if (deviceName.equals("HC06")){
+                if (deviceName.equals("HC06")) {
                     //Connection specific to hc06 module
                     hc06 = bluetoothAdapter.getRemoteDevice(deviceHardwareAddress);
                     //Setting mUUID to the mac address of hc06
@@ -65,16 +65,16 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 }
             }
-            if (!devices.contains("HC06")){
+            if (!devices.contains("HC06")) {
                 Toast.makeText(this, "Not connected to HC06", Toast.LENGTH_SHORT).show();
             }
 
-        } else{
+        } else {
             Toast.makeText(this, "Please pair a device", Toast.LENGTH_SHORT).show();
         }
 
         //Trying to establish a specific socket connection to the hc06 module
-        if (mUUID != null){
+        if (mUUID != null) {
             int counter = 0;
             BluetoothSocket bluetoothSocket = null;
 
@@ -90,15 +90,15 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error establishing direct connection to hc06", Toast.LENGTH_SHORT).show();
                 }
                 counter++;
-            }while (!bluetoothSocket.isConnected() && counter < 3);
+            } while (!bluetoothSocket.isConnected() && counter < 3);
 
             try {
                 bluetoothSocket.close();
                 Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else{
+        } else {
             Log.d(TAG, "onCreate: mUUID null");
         }
 
@@ -108,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
         synchronizeData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SynchronizedDataActivity.class));
+                Intent startSynchronizing = new Intent(MainActivity.this, SynchronizedDataActivity.class);
+                startActivity(startSynchronizing);
             }
         });
     }
