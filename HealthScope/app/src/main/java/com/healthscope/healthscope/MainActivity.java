@@ -19,13 +19,13 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     //UUID for the hc06 module
-    private static UUID mUUID;
+    public static UUID mUUID;
 
     //Request code for enabling bluetooth. The value doesn't matter. It could be 1 or a million.
-    private static final int REQUEST_ENABLE_BT = 1;
-    private static final String TAG = "Bluetooth Code";
-    private BluetoothDevice hc06;
-    private BluetoothAdapter bluetoothAdapter;
+    public static final int REQUEST_ENABLE_BT = 1;
+    public static final String TAG = "Bluetooth Code";
+    public BluetoothDevice hc06;
+    public BluetoothAdapter bluetoothAdapter;
     Button synchronizeData;
 
     @Override
