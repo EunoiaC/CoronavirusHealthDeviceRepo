@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
             BluetoothSocket bluetoothSocket = null;
 
             do {
+                Log.d(TAG, "onCreate: mUUID not null");
                 try {
                     bluetoothSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
                     Log.d(TAG, "onCreate: " + bluetoothSocket);
