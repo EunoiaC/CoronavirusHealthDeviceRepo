@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
         if (!bluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        } else{
+            synchronizeData.setEnabled(true);
         }
 
         Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
@@ -107,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
             synchronizeData.setEnabled(false);
         }
 
+        //Checks if bluetooth went from disabled to enabled
 
         //Button code
         synchronizeData.setOnClickListener(new View.OnClickListener() {
