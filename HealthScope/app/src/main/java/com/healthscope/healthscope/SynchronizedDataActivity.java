@@ -1,16 +1,16 @@
 package com.healthscope.healthscope;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.github.mikephil.charting.charts.LineChart;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,11 +26,14 @@ public class SynchronizedDataActivity extends AppCompatActivity {
     public static final String TAG = "Bluetooth Code";
     public BluetoothDevice hc06;
     public BluetoothAdapter bluetoothAdapter;
+    public LineChart heatGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_synchronized_data);
+
+        heatGraph = findViewById(R.id.heatGraph);
 
         LoadingDialog loadingDialog = new LoadingDialog(SynchronizedDataActivity.this);
         loadingDialog.starLoadingAlertDialog();
@@ -68,6 +71,9 @@ public class SynchronizedDataActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Please pair a device", Toast.LENGTH_SHORT).show();
         }
+
+        //Test data for graph
+        
 
         //Trying to establish a specific socket connection to the hc06 module
         if (mUUID != null) {
