@@ -10,7 +10,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.mikephil.charting.charts.LineChart;
+
+import com.jjoe64.graphview.GraphView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class SynchronizedDataActivity extends AppCompatActivity {
     public static final String TAG = "Bluetooth Code";
     public BluetoothDevice hc06;
     public BluetoothAdapter bluetoothAdapter;
-    public LineChart heatGraph;
+    public GraphView heatGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,6 @@ public class SynchronizedDataActivity extends AppCompatActivity {
         }
 
         //Test data for graph
-        
 
         //Trying to establish a specific socket connection to the hc06 module
         if (mUUID != null) {
