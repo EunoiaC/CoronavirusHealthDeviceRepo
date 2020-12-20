@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -74,6 +76,15 @@ public class SynchronizedDataActivity extends AppCompatActivity {
         }
 
         //Test data for graph
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
+                new DataPoint(9, 87),
+                new DataPoint(10, 5),
+                new DataPoint(11, 3),
+                new DataPoint(12, 2),
+                new DataPoint(13, 6)
+        });
+        heatGraph.addSeries(series);
+        loadingDialog.dismissDialog();
 
         //Trying to establish a specific socket connection to the hc06 module
         if (mUUID != null) {
