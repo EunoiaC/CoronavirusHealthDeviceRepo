@@ -79,44 +79,44 @@ public class MainActivity extends AppCompatActivity {
             //synchronizeData.setEnabled(false);
         }
 
-        //Trying to establish a specific socket connection to the hc06 module
-        if (mUUID != null) {
-            int counter = 0;
-            BluetoothSocket bluetoothSocket = null;
-
-            do {
-                Log.d(TAG, "onCreate: mUUID not null");
-                try {
-                    bluetoothSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
-                    Log.d(TAG, "onCreate: " + bluetoothSocket);
-                    bluetoothSocket.connect();
-                    Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, "Error establishing direct connection to hc06", Toast.LENGTH_SHORT).show();
-                }
-                counter++;
-            } while (!bluetoothSocket.isConnected() && counter < 3);
-
-            try {
-                bluetoothSocket.close();
-                Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            Log.d(TAG, "onCreate: mUUID null");
-            //synchronizeData.setEnabled(false);
-        }
-
         //Checks if bluetooth went from disabled to enabled
 
         //Button code
         synchronizeData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent startSynchronizing = new Intent(MainActivity.this, SynchronizedDataActivity.class);
-                startActivity(startSynchronizing);
+                LoadingDialog loadingDialog = new LoadingDialog(MainActivity.this);
+                loadingDialog.starLoadingAlertDialog();
+
+                //Trying to establish a specific socket connection to the hc06 module
+                if (mUUID != null) {
+                    int counter = 0;
+                    BluetoothSocket bluetoothSocket = null;
+
+                    do {
+                        Log.d(TAG, "onCreate: mUUID not null");
+                        try {
+                            bluetoothSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
+                            Log.d(TAG, "onCreate: " + bluetoothSocket);
+                            bluetoothSocket.connect();
+                            Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(MainActivity.this, "Error establishing direct connection to hc06", Toast.LENGTH_SHORT).show();
+                        }
+                        counter++;
+                    } while (!bluetoothSocket.isConnected() && counter < 3);
+
+                    try {
+                        bluetoothSocket.close();
+                        Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.d(TAG, "onCreate: mUUID null");
+                    //synchronizeData.setEnabled(false);
+                }
             }
         });
     }

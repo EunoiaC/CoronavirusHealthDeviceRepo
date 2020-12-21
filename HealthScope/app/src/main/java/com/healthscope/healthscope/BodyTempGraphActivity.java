@@ -12,15 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
-public class SynchronizedDataActivity extends AppCompatActivity {
+public class BodyTempGraphActivity extends AppCompatActivity {
     //UUID for the hc06 module
     public static UUID mUUID;
 
@@ -34,12 +32,10 @@ public class SynchronizedDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_synchronized_data);
+        setContentView(R.layout.activity_body_temp_graph);
 
         heatGraph = findViewById(R.id.heatGraph);
 
-        LoadingDialog loadingDialog = new LoadingDialog(SynchronizedDataActivity.this);
-        loadingDialog.starLoadingAlertDialog();
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         //This code enables Bluetooth if it isn't enabled
