@@ -58,7 +58,7 @@ public class SynchronizedDataActivity extends AppCompatActivity {
                 String deviceHardwareAddress = device.getAddress(); // MAC address
                 Log.d(TAG, "onCreate: " + deviceName);
                 devices.add(deviceName);
-                if (deviceName.equals("HC06")) {
+                if (deviceName.equals("HC-06")) {
                     //Connection specific to hc06 module
                     hc06 = bluetoothAdapter.getRemoteDevice(deviceHardwareAddress);
                     //Setting mUUID to the mac address of hc06
@@ -67,7 +67,7 @@ public class SynchronizedDataActivity extends AppCompatActivity {
                     break;
                 }
             }
-            if (!devices.contains("HC06")) {
+            if (!devices.contains("HC-06")) {
                 Toast.makeText(this, "Not connected to HC06", Toast.LENGTH_SHORT).show();
             }
 
