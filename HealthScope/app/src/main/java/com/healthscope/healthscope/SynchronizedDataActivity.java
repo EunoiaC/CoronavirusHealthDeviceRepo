@@ -76,15 +76,15 @@ public class SynchronizedDataActivity extends AppCompatActivity {
         }
 
         //Test data for graph
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(9, 87),
-                new DataPoint(10, 5),
-                new DataPoint(11, 3),
-                new DataPoint(12, 2),
-                new DataPoint(13, 6)
-        });
-        heatGraph.addSeries(series);
-        loadingDialog.dismissDialog();
+//        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
+//                new DataPoint(9, 87),
+//                new DataPoint(10, 5),
+//                new DataPoint(11, 3),
+//                new DataPoint(12, 2),
+//                new DataPoint(13, 6)
+//        });
+//        heatGraph.addSeries(series);
+//        loadingDialog.dismissDialog();
 
         //Trying to establish a specific socket connection to the hc06 module
         if (mUUID != null) {
