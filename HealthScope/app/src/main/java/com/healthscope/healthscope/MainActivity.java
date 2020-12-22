@@ -106,8 +106,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                         counter++;
                     } while (!bluetoothSocket.isConnected() && counter < 3);
-
-                    sendSignal(9);
                 } else {
                     Log.d(TAG, "onCreate: mUUID null");
                     //synchronizeData.setEnabled(false);
