@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "Bluetooth Code";
     public BluetoothDevice hc06;
     public BluetoothAdapter bluetoothAdapter;
+    public BluetoothSocket bluetoothSocket = null;
     Button synchronizeData;
 
     @Override
@@ -91,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 //Trying to establish a specific socket connection to the hc06 module
                 if (mUUID != null) {
                     int counter = 0;
-                    BluetoothSocket bluetoothSocket = null;
 
                     do {
                         Log.d(TAG, "onCreate: mUUID not null");
@@ -107,17 +107,33 @@ public class MainActivity extends AppCompatActivity {
                         counter++;
                     } while (!bluetoothSocket.isConnected() && counter < 3);
 
-                    try {
-                        bluetoothSocket.close();
-                        Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    sendSignal(9);
                 } else {
                     Log.d(TAG, "onCreate: mUUID null");
                     //synchronizeData.setEnabled(false);
                 }
             }
         });
+    }
+
+    private void sendSignal ( int number ) {
+        if ( bluetoothSocket != null ) {
+            try {
+                bluetoothSocket.getOutputStream().write(String.valueOf(number).getBytes());
+            } catch (IOException e) {
+                Log.d(TAG, "sendSignal: error");
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        try {
+            bluetoothSocket.close();
+            Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
     }
 }
