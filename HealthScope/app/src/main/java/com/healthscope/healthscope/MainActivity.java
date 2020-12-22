@@ -88,6 +88,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 LoadingDialog loadingDialog = new LoadingDialog(MainActivity.this);
                 loadingDialog.starLoadingAlertDialog();
+                if (!bluetoothAdapter.isEnabled()){
+                    Toast.makeText(MainActivity.this, "Please enable bluetooth", Toast.LENGTH_SHORT).show();
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                    loadingDialog.dismissDialog();
+                    return;
+                }
 
                 //Trying to establish a specific socket connection to the hc06 module
                 if (mUUID != null) {
@@ -102,13 +109,20 @@ public class MainActivity extends AppCompatActivity {
                             Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
                         } catch (IOException e) {
                             e.printStackTrace();
+                            try {
+                                bluetoothSocket.close();
+                                Log.d(TAG, "onCreate: " + bluetoothSocket.isConnected());
+                            } catch (Exception error) {
+                                error.printStackTrace();
+                            }
                             Toast.makeText(MainActivity.this, "Error establishing direct connection to hc06", Toast.LENGTH_SHORT).show();
                         }
                         counter++;
                     } while (!bluetoothSocket.isConnected() && counter < 3);
                 } else {
                     Log.d(TAG, "onCreate: mUUID null");
-                    //synchronizeData.setEnabled(false);
+                    loadingDialog.dismissDialog();
+                    Toast.makeText(MainActivity.this, "Cannot synchronize data if not connected to HC-06", Toast.LENGTH_SHORT).show();
                 }
             }
         });
