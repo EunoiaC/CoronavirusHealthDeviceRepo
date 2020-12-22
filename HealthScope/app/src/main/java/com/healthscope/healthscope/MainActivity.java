@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
     //UUID for the hc06 module
-    public static UUID mUUID;
+    private UUID mUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     //Request code for enabling bluetooth. The value doesn't matter. It could be 1 or a million.
     public static final int REQUEST_ENABLE_BT = 1;
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     //Connection specific to hc06 module
                     hc06 = bluetoothAdapter.getRemoteDevice(deviceHardwareAddress);
                     //Setting mUUID to the mac address of hc06
-                    mUUID = UUID.fromString(deviceHardwareAddress);
+                    //mUUID = UUID.fromString(deviceHardwareAddress);
                     Toast.makeText(this, "Connected to " + hc06.getName(), Toast.LENGTH_SHORT).show();
                     break;
                 }
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //Trying to establish a specific socket connection to the hc06 module
-                if (mUUID != null) {
+                if (hc06 != null) {
                     int counter = 0;
 
                     do {
