@@ -84,12 +84,16 @@ public class MainActivity extends AppCompatActivity {
         sendData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                connection.connect();
-                if (connection.isConnected()) {
-                    connection.write(Integer.valueOf(input.getText().toString()));
-                    connection.closeConnection();
-                } else {
-                    Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
+                if (hc06 != null){
+                    connection.connect();
+                    if (connection.isConnected()){
+                        connection.write(Integer.valueOf(input.getText().toString()));
+                        connection.closeConnection();
+                    }else{
+                        Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
+                    }
+                } else{
+                    Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -97,13 +101,17 @@ public class MainActivity extends AppCompatActivity {
         receive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                connection.connect();
-                if (connection.isConnected()) {
-                    char data = connection.read();
-                    Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
-                    connection.closeConnection();
-                } else {
-                    Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
+                if (hc06 != null){
+                    connection.connect();
+                    if (connection.isConnected()){
+                        char data = connection.read();
+                        Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
+                        connection.closeConnection();
+                    }else{
+                        Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
+                    }
+                } else{
+                    Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
                 }
             }
         });
