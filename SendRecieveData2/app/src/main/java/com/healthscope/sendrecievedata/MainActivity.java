@@ -104,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
                 if (hc06 != null){
                     connection.connect();
                     if (connection.isConnected()){
-                        connection.read();
+                        char data = connection.read();
+                        Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
                     }else{
                         Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
                     }
