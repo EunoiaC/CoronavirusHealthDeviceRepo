@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     public BluetoothAdapter bluetoothAdapter;
     public BluetoothDevice hc06;
+    TextInputEditText input;
+
 
     Button sendData;
 
@@ -35,8 +39,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sendData = findViewById(R.id.sendData);
+        input = findViewById(R.id.input);
 
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             // Device doesn't support Bluetooth
             Toast.makeText(this, "Your device does not support bluetooth", Toast.LENGTH_SHORT).show();
@@ -81,13 +86,15 @@ public class MainActivity extends AppCompatActivity {
                     Connection connection = new Connection(hc06, mUUID);
                     connection.connect();
                     if (connection.isConnected()){
-                        connection.write(48);
+                        connection.write(Integer.valueOf(input.getText().toString()));
                         char string = connection.read();
                         Log.d(TAG, "onClick: " + string);
                         connection.closeConnection();
                     }else{
                         Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
                     }
+                } else{
+                    Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
                 }
             }
         });
