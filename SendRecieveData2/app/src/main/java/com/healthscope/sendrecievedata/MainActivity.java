@@ -97,9 +97,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (hc06 != null) {
-                    connection.write(Integer.parseInt(input.getText().toString()));
-                    String data = connection.read(26);
-                    Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
+                    if (connection.isConnected()) {
+                        connection.write(Integer.parseInt(input.getText().toString()));
+                        String data = connection.read(26);
+                        Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -139,50 +143,55 @@ public class MainActivity extends AppCompatActivity {
         sendAndReceive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BluetoothSocket btSocket = null;
-                int counter = 0;
-                do {
+                if (hc06 != null) {
+                    BluetoothSocket btSocket = null;
+                    int counter = 0;
+                    do {
+                        try {
+                            btSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
+                            System.out.println(btSocket);
+                            btSocket.connect();
+                            System.out.println(btSocket.isConnected());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        counter++;
+                    } while (!btSocket.isConnected() && counter < 3);
+
+
                     try {
-                        btSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
-                        System.out.println(btSocket);
-                        btSocket.connect();
+                        OutputStream outputStream = btSocket.getOutputStream();
+                        outputStream.write(Integer.parseInt(input.getText().toString()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                    InputStream inputStream = null;
+                    try {
+                        inputStream = btSocket.getInputStream();
+                        inputStream.skip(inputStream.available());
+
+                        for (int i = 0; i < 26; i++) {
+
+                            byte b = (byte) inputStream.read();
+                            System.out.println((char) b);
+
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+
+                    try {
+                        btSocket.close();
                         System.out.println(btSocket.isConnected());
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                    counter++;
-                } while (!btSocket.isConnected() && counter < 3);
-
-
-                try {
-                    OutputStream outputStream = btSocket.getOutputStream();
-                    outputStream.write(48);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                InputStream inputStream = null;
-                try {
-                    inputStream = btSocket.getInputStream();
-                    inputStream.skip(inputStream.available());
-
-                    for (int i = 0; i < 26; i++) {
-
-                        byte b = (byte) inputStream.read();
-                        System.out.println((char) b);
-
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
-                try {
-                    btSocket.close();
-                    System.out.println(btSocket.isConnected());
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
 
             }
@@ -209,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
 
                     try {
                         OutputStream outputStream = btSocket.getOutputStream();
-                        outputStream.write(Integer.valueOf(input.getText().toString()));
+                        outputStream.write(Integer.parseInt(input.getText().toString()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
