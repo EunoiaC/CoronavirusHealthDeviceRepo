@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     TextInputEditText input;
 
 
-    Button sendData;
+    Button sendData, receive;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         sendData = findViewById(R.id.sendData);
         input = findViewById(R.id.input);
+        receive = findViewById(R.id.receive);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
@@ -79,16 +80,14 @@ public class MainActivity extends AppCompatActivity {
             //synchronizeData.setEnabled(false);
         }
 
+        final Connection connection = new Connection(hc06, mUUID);
         sendData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hc06 != null){
-                    Connection connection = new Connection(hc06, mUUID);
                     connection.connect();
                     if (connection.isConnected()){
                         connection.write(Integer.valueOf(input.getText().toString()));
-                        char string = connection.read();
-                        Log.d(TAG, "onClick: " + string);
                         connection.closeConnection();
                     }else{
                         Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
@@ -96,6 +95,13 @@ public class MainActivity extends AppCompatActivity {
                 } else{
                     Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        receive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connection.read();
             }
         });
     }
