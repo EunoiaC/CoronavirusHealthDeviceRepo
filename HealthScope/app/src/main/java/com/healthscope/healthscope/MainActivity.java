@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                     int counter = 0;
 
                     do {
-                        Log.d(TAG, "onCreate: mUUID not null");
+                        Log.d(TAG, "onCreate: hc06 not null");
                         try {
                             bluetoothSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
                             Log.d(TAG, "onCreate: " + bluetoothSocket);
@@ -119,6 +119,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                         counter++;
                     } while (!bluetoothSocket.isConnected() && counter < 3);
+
+                    sendSignal("Alperen");
                 } else {
                     Log.d(TAG, "onCreate: mUUID null");
                     loadingDialog.dismissDialog();
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void sendSignal ( int number ) {
+    private void sendSignal ( String number ) {
         if ( bluetoothSocket != null ) {
             try {
                 bluetoothSocket.getOutputStream().write(String.valueOf(number).getBytes());
