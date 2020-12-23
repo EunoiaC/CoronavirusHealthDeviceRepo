@@ -28,10 +28,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     public BluetoothAdapter bluetoothAdapter;
     public BluetoothDevice hc06;
+    public Connection connection;
     TextInputEditText input;
 
 
-    Button sendData, receive;
+    Button sendData, receive, sendUsingClass, receiveUsingClass, sendAndReceive, sendAndReceiveUsingClass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
         sendData = findViewById(R.id.sendData);
         input = findViewById(R.id.input);
         receive = findViewById(R.id.receive);
+        sendUsingClass = findViewById(R.id.sendDataUsignConnection);
+        receiveUsingClass = findViewById(R.id.receiveUsingConnection);
+        sendAndReceive = findViewById(R.id.sendAndReceive);
+        sendAndReceiveUsingClass = findViewById(R.id.sendAndReceiveUsingConnection);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
@@ -80,16 +85,137 @@ public class MainActivity extends AppCompatActivity {
             //synchronizeData.setEnabled(false);
         }
 
-        final Connection connection = new Connection(hc06, mUUID);
-        connection.connect();
-        sendData.setOnClickListener(new View.OnClickListener() {
+        //Using connection class
+        if (hc06 != null){
+            connection = new Connection(hc06, mUUID);
+            connection.connect();
+        } else{
+            Toast.makeText(this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
+        }
+
+        sendAndReceiveUsingClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connection.write(Integer.parseInt(input.getText().toString()));
+            }
+        });
+
+        sendUsingClass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hc06 != null){
                     if (connection.isConnected()){
-                        connection.write(Integer.valueOf(input.getText().toString()));
+                        connection.write(Integer.parseInt(input.getText().toString()));
                     }else{
                         Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
+                    }
+                } else{
+                    Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        receiveUsingClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (hc06 != null){
+                    if (connection.isConnected()){
+                        String data = connection.read(26);
+                        Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
+                    }
+                } else{
+                    Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //No connection class
+        sendAndReceive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BluetoothSocket btSocket = null;
+                int counter = 0;
+                do {
+                    try {
+                        btSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
+                        System.out.println(btSocket);
+                        btSocket.connect();
+                        System.out.println(btSocket.isConnected());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    counter++;
+                } while (!btSocket.isConnected() && counter < 3);
+
+
+                try {
+                    OutputStream outputStream = btSocket.getOutputStream();
+                    outputStream.write(48);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                InputStream inputStream = null;
+                try {
+                    inputStream = btSocket.getInputStream();
+                    inputStream.skip(inputStream.available());
+
+                    for (int i = 0; i < 26; i++) {
+
+                        byte b = (byte) inputStream.read();
+                        System.out.println((char) b);
+
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                try {
+                    btSocket.close();
+                    System.out.println(btSocket.isConnected());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        sendData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (hc06 != null){
+                    BluetoothSocket btSocket = null;
+                    int counter = 0;
+                    do {
+                        try {
+                            btSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
+                            System.out.println(btSocket);
+                            btSocket.connect();
+                            System.out.println(btSocket.isConnected());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        counter++;
+                    } while (!btSocket.isConnected() && counter < 3);
+
+
+                    try {
+                        OutputStream outputStream = btSocket.getOutputStream();
+                        outputStream.write(Integer.valueOf(input.getText().toString()));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
+                    try {
+                        btSocket.close();
+                        System.out.println(btSocket.isConnected());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 } else{
                     Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
@@ -101,11 +227,40 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (hc06 != null){
-                    if (connection.isConnected()){
-                        char data = connection.read();
-                        Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
+                    BluetoothSocket btSocket = null;
+                    int counter = 0;
+                    do {
+                        try {
+                            btSocket = hc06.createRfcommSocketToServiceRecord(mUUID);
+                            System.out.println(btSocket);
+                            btSocket.connect();
+                            System.out.println(btSocket.isConnected());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        counter++;
+                    } while (!btSocket.isConnected() && counter < 3);
+
+                    InputStream inputStream = null;
+                    try {
+                        inputStream = btSocket.getInputStream();
+                        inputStream.skip(inputStream.available());
+
+                        for (int i = 0; i < 26; i++) {
+
+                            byte b = (byte) inputStream.read();
+                            System.out.println((char) b);
+
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        btSocket.close();
+                        System.out.println(btSocket.isConnected());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 } else{
                     Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();

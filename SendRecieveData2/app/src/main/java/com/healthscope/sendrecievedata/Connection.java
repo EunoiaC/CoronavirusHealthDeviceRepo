@@ -2,6 +2,7 @@ package com.healthscope.sendrecievedata;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +10,10 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 public class Connection {
-    BluetoothSocket socket;
-    BluetoothDevice device;
-    UUID uuid;
+    private BluetoothSocket socket;
+    private BluetoothDevice device;
+    private UUID uuid;
+    private Boolean connected;
 
     public Connection(BluetoothDevice device, UUID uuid){
         this.device = device;
@@ -32,6 +34,11 @@ public class Connection {
             }
             counter++;
         }while (!socket.isConnected() && counter < 3);
+        if (socket.isConnected()){
+            connected = true;
+        } else{
+            connected = false;
+        }
     }
     
     void write (int num){
@@ -44,22 +51,24 @@ public class Connection {
         }
     }
     
-    char read(){
+    String read(int charsReceived){
         char input = 0;
+        String receivedString = "";
         InputStream inputStream = null;
         try {
             inputStream = socket.getInputStream();
             inputStream.skip(inputStream.available());
-            
-            for (int i = 0; i < 26; i++){
+
+            for (int i = 0; i < charsReceived; i++){
                 byte b = (byte) inputStream.read();
                 System.out.println((char) b);
                 input = (char) b;
+                receivedString = receivedString + input;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return input;
+        return receivedString;
     }
 
     void closeConnection(){
@@ -73,6 +82,6 @@ public class Connection {
     }
 
     Boolean isConnected(){
-        return socket.isConnected();
+        return connected;
     }
 }
