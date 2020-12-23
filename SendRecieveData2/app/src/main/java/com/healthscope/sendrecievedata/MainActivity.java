@@ -101,7 +101,16 @@ public class MainActivity extends AppCompatActivity {
         receive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                connection.read();
+                if (hc06 != null){
+                    connection.connect();
+                    if (connection.isConnected()){
+                        connection.read();
+                    }else{
+                        Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
+                    }
+                } else{
+                    Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
