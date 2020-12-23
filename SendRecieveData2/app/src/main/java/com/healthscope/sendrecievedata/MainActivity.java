@@ -96,7 +96,11 @@ public class MainActivity extends AppCompatActivity {
         sendAndReceiveUsingClass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                connection.write(Integer.parseInt(input.getText().toString()));
+                if (hc06 != null) {
+                    connection.write(Integer.parseInt(input.getText().toString()));
+                    String data = connection.read(26);
+                    Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
