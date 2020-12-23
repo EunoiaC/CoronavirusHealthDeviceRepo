@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     public final static int REQUEST_ENABLE_BT = 1;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     BluetoothAdapter bta;                 //bluetooth stuff
-    BluetoothSocket mmSocket;             //bluetooth stuff
+    public BluetoothSocket mmSocket;             //bluetooth stuff
     BluetoothDevice mmDevice;             //bluetooth stuff
     ConnectThread my_c_thread = null;
     ConnectedThread my_bs = null;
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         my_c_thread = new ConnectThread();
-        my_c_thread.start();
+        my_c_thread.run();
     }
 
     public void Send_data(View view) {
