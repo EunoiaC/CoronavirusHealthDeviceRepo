@@ -86,10 +86,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //Using connection class
-        if (hc06 != null){
+        if (hc06 != null) {
             connection = new Connection(hc06, mUUID);
             connection.connect();
-        } else{
+        } else {
             Toast.makeText(this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
         }
 
@@ -101,9 +101,13 @@ public class MainActivity extends AppCompatActivity {
                         connection.write(Integer.parseInt(input.getText().toString()));
                         String data = connection.read(26);
                         Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
-                    }else{
+                        connection.closeConnection();
+                    } else {
+                        connection.connect();
                         Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(MainActivity.this, "Device is not connected to hc06", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -111,13 +115,13 @@ public class MainActivity extends AppCompatActivity {
         sendUsingClass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hc06 != null){
-                    if (connection.isConnected()){
+                if (hc06 != null) {
+                    if (connection.isConnected()) {
                         connection.write(Integer.parseInt(input.getText().toString()));
-                    }else{
+                    } else {
                         Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
                     }
-                } else{
+                } else {
                     Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -126,14 +130,14 @@ public class MainActivity extends AppCompatActivity {
         receiveUsingClass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hc06 != null){
-                    if (connection.isConnected()){
+                if (hc06 != null) {
+                    if (connection.isConnected()) {
                         String data = connection.read(26);
                         Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
-                    }else{
+                    } else {
                         Toast.makeText(MainActivity.this, "Could not connect to HC-06 module", Toast.LENGTH_SHORT).show();
                     }
-                } else{
+                } else {
                     Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -194,6 +198,9 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+                } else {
+
+                    Toast.makeText(MainActivity.this, "Device is not connected to hc06", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -202,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
         sendData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hc06 != null){
+                if (hc06 != null) {
                     BluetoothSocket btSocket = null;
                     int counter = 0;
                     do {
@@ -232,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else{
+                } else {
                     Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -241,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
         receive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hc06 != null){
+                if (hc06 != null) {
                     BluetoothSocket btSocket = null;
                     int counter = 0;
                     do {
@@ -277,7 +284,7 @@ public class MainActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else{
+                } else {
                     Toast.makeText(MainActivity.this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
                 }
             }
