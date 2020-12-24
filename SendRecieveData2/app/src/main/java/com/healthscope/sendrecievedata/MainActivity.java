@@ -171,13 +171,15 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         inputStream = btSocket.getInputStream();
                         inputStream.skip(inputStream.available());
-
+                        String data = "";
                         for (int i = 0; i < 26; i++) {
 
                             byte b = (byte) inputStream.read();
                             System.out.println((char) b);
-
+                            data = data + (char) b;
                         }
+
+                        Toast.makeText(MainActivity.this, data, Toast.LENGTH_SHORT).show();
 
                     } catch (IOException e) {
                         e.printStackTrace();
