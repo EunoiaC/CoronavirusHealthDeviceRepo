@@ -1,11 +1,14 @@
 package com.healthscope.sendandreceivewithconnectthread;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,6 +17,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.UUID;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 public class BluetoothConnectionService {
     private static final String TAG = "BluetoothConnectionServ";
@@ -68,7 +73,6 @@ public class BluetoothConnectionService {
                 socket = mmServerSocket.accept();
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             if (socket == null) {
@@ -81,7 +85,6 @@ public class BluetoothConnectionService {
                 mmServerSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -101,7 +104,6 @@ public class BluetoothConnectionService {
                 tmp = mmDevice.createRfcommSocketToServiceRecord(deviceUUID);
             } catch (IOException e) {
                 e.printStackTrace();
-                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
 
             mmSocket = tmp;
@@ -115,7 +117,7 @@ public class BluetoothConnectionService {
                 try {
                     mmSocket.close();
                 } catch (IOException ex) {
-                    Toast.makeText(mContext, ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    ex.printStackTrace();
                 }
             }
 
@@ -172,13 +174,17 @@ public class BluetoothConnectionService {
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
 
-            mProgressDialog.dismiss();
+            try{
+                mProgressDialog.dismiss();
+            }catch(NullPointerException e){
+                e.printStackTrace();
+            }
 
             try {
                 tmpIn = mmSocket.getInputStream();
                 tmpOut = mmSocket.getOutputStream();
             } catch (IOException e) {
-                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             }
 
             mmInStream = tmpIn;
@@ -192,10 +198,10 @@ public class BluetoothConnectionService {
             while (true) {
                 try {
                     bytes = mmInStream.read(buffer);
-                    String incomingMessage = new String(buffer, 0, bytes);
+                    final String incomingMessage = new String(buffer, 0, bytes);
+                    Log.d(TAG, "Received message: " + incomingMessage);
                 } catch (IOException e) {
                     e.printStackTrace();
-                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                     break;
                 }
 
