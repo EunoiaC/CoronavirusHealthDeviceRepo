@@ -13,11 +13,12 @@ public class Connection {
     private BluetoothSocket socket;
     private BluetoothDevice device;
     private UUID uuid;
-    private Boolean connected = false;
+    private Boolean connected;
 
     public Connection(BluetoothDevice device, UUID uuid){
         this.device = device;
         this.uuid = uuid;
+        connected = false;
     }
 
     void connect(){
