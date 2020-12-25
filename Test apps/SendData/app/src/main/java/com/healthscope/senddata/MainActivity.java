@@ -33,17 +33,21 @@ public class MainActivity extends AppCompatActivity {
         btAdapter = BluetoothAdapter.getDefaultAdapter();
 
         Set<BluetoothDevice> pairedDevices = btAdapter.getBondedDevices();
+        int k=0;
+        while(k==0) {
 
-        if (pairedDevices.size() > 0) {
-            // There are paired devices. Get the name and address of each paired device.
-            for (BluetoothDevice device : pairedDevices) {
-                String deviceName = device.getName();
-                String deviceHardwareAddress = device.getAddress(); // MAC address
-                if (deviceName.equals("HC-06")) { //If the device name is HC-06, the BluetoothDevice object called hc06 will be connected by it's address
-                    hc06 = btAdapter.getRemoteDevice(deviceHardwareAddress);
-                    //hc06 = device; This can be used as well, but I am not using it just to be sure
-                    Toast.makeText(this, "Established connection to HC-06", Toast.LENGTH_SHORT).show();
-                    break;
+            if (pairedDevices.size() > 0) {
+                // There are paired devices. Get the name and address of each paired device.
+                for (BluetoothDevice device : pairedDevices) {
+                    String deviceName = device.getName();
+                    String deviceHardwareAddress = device.getAddress(); // MAC address
+                    if (deviceName.equals("HC-06")) { //If the device name is HC-06, the BluetoothDevice object called hc06 will be connected by it's address
+                        k++;
+                        hc06 = btAdapter.getRemoteDevice(deviceHardwareAddress);
+                        //hc06 = device; This can be used as well, but I am not using it just to be sure
+                        Toast.makeText(this, "Established connection to HC-06", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
                 }
             }
         }

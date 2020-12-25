@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     //public final static String MODULE_MAC=null ;
     public final static int REQUEST_ENABLE_BT = 1;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    BluetoothAdapter bta;                 //bluetooth stuff
+    BluetoothAdapter bta;                 //Bluetooth Device
     public BluetoothSocket mmSocket;             //bluetooth stuff
     BluetoothDevice mmDevice;             //bluetooth stuff
     ConnectThread my_c_thread = null;

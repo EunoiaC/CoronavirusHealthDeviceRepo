@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">HealthScope</string>
+    <string name="list_devices">LIST DEVICES</string>
+    <string name="todo">TODO</string>
 </resources>
