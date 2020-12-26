@@ -27,14 +27,16 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "Bluetooth Code";
     public BluetoothDevice hc06;
     public BluetoothAdapter bluetoothAdapter;
-    Button pairButton = (Button) findViewById(R.id.button_pair);
-    ListView listPaired = (ListView) findViewById(R.id.pair_list);
+    Button pairButton;
+    ListView listPaired;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        listPaired = findViewById(R.id.pair_list);
+        pairButton = findViewById(R.id.button_pair);
 
         //This code check if the user device allows Bluetooth
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
