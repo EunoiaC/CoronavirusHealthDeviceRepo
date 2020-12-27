@@ -13,6 +13,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,11 +36,21 @@ public class MainActivity extends AppCompatActivity {
     ConnectThread my_c_thread = null;
     ConnectedThread my_bs = null;
     Handler my_main_handler = null;
+    Button takeSurvey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        takeSurvey = findViewById(R.id.takeSurvey);
+
+        takeSurvey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SurveyActivity.class));
+            }
+        });
 
         //This code check if the user device allows Bluetooth
         bta = BluetoothAdapter.getDefaultAdapter();

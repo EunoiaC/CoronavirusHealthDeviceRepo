@@ -1,9 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SurveyActivity">
+    android:gravity="center|top"
+    android:orientation="vertical"
+    tools:context=".SurveyActivity"
+    android:padding="10dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <com.example.healthscope_v03.CheckboxQuestion
+        android:id="@+id/question1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:questionNumber="1"
+        app:questionTitle="Do you have loss of smell or taste?" />
+
+    <com.example.healthscope_v03.CheckboxQuestion
+        android:id="@+id/question2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:questionNumber="2"
+        app:questionTitle="Do you have joint pain?" />
+
+    <com.example.healthscope_v03.CheckboxQuestion
+        android:id="@+id/question3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:questionNumber="3"
+        app:questionTitle="Do you feel tired?" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:id="@+id/submit"/>
+
+</LinearLayout>
