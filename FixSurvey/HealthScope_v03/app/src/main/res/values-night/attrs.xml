@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CheckboxQuestion">
+        <attr name="questionTitle" format="string" />
+        <attr name="questionNumber" format="string" />
+    </declare-styleable>
+</resources>

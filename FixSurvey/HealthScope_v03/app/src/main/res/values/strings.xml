@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">HealthScope_v0.3</string>
+    <string name="Connect_button">Connect</string>
+    <string name="Get_button">Get Data</string>
+    <string name="Send_button">Send Data</string>
+    <string name="Send_Text_hint">Type the integer you want to send</string>
+    <string name="take_survey">Take Survey</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="_1_do_you_have_loss_of_smell_or_taste">1. Do you have loss of smell or taste?</string>
+    <string name="_2_do_you_have_joint_pain">2. Do you have joint pain?</string>
+    <string name="_1_do_you_feel_tired">1. Do you feel tired?</string>
+    <string name="submit_survey">Submit Survey</string>
+    <string name="submit_results">Submit Results</string>
+</resources>
