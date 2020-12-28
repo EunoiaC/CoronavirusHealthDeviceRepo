@@ -33,6 +33,7 @@ public class SurveyActivity extends AppCompatActivity {
                 Toast.makeText(SurveyActivity.this, "Question 1 answer " + q1.getAnswer(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(SurveyActivity.this, "Question 2 answer " + q2.getAnswer(), Toast.LENGTH_SHORT).show();
                 Toast.makeText(SurveyActivity.this, "Question 3 answer " + q3.getAnswer(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SurveyActivity.this, "Survey Completed.", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(SurveyActivity.this, MainActivity.class));
             }
         });
