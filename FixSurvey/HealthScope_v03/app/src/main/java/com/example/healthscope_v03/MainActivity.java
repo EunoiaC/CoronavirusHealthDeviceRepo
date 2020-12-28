@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView ReadView;
     TextView WriteView;
-    Button takeSurvey;
+    Button takeSurvey, sendDataBtn, startConnectionBtn;
 
 
     @Override
@@ -52,6 +52,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         takeSurvey = findViewById(R.id.surveyBtn);
+        sendDataBtn = findViewById(R.id.button2);
+        startConnectionBtn = findViewById(R.id.startConnection);
+
+        startConnectionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                start_connection();
+            }
+        });
+
+        sendDataBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Send_data();
+            }
+        });
 
         takeSurvey.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +84,16 @@ public class MainActivity extends AppCompatActivity {
             // Device doesn't support Bluetooth
             Toast.makeText(this, "This device does not support Bluetooth", Toast.LENGTH_SHORT).show();
             return;
+        }
+
+        Intent i = getIntent();
+        if (i.getStringExtra("Question 1") != null){
+            String toNumber = i.getStringExtra("Question 1") + i.getStringExtra("Question 2") + i.getStringExtra("Question 3");
+            Log.d(TAG, "onCreate: " + toNumber);
+            EditText editText = findViewById(R.id.Write_Text);
+            editText.setText(toNumber);
+            start_connection();
+            Send_data();
         }
 
         //This code enables Bluetooth if it isn't enabled
@@ -120,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
  */
 
-    public void start_connection(View view) {
+    public void start_connection() {
         // Check whether BT is on. Send request to enable it If it is off.
         if (!bta.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -139,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void Send_data (View view){
+    public void Send_data (){
         if(my_bs==null) {
             Toast.makeText(this, "Bluetooth connection is not made", Toast.LENGTH_SHORT).show();
             return;

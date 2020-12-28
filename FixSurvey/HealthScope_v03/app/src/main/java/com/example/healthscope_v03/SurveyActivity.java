@@ -31,7 +31,11 @@ public class SurveyActivity extends AppCompatActivity {
                     return;
                 }
                 Toast.makeText(SurveyActivity.this, "Survey Completed.", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(SurveyActivity.this, MainActivity.class));
+                Intent i = new Intent(SurveyActivity.this, MainActivity.class);
+                i.putExtra("Question 1", q1.getAnswer());
+                i.putExtra("Question 2", q2.getAnswer());
+                i.putExtra("Question 3", q3.getAnswer());
+                startActivity(i);
             }
         });
     }
