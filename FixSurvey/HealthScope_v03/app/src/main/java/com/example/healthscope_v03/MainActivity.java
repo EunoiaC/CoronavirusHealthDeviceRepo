@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     BluetoothDevice mmDevice;             //bluetooth stuff
     ConnectedThread my_bs;
 
+    EditText inputData;
     TextView ReadView;
     TextView WriteView;
     Button takeSurvey, sendDataBtn, startConnectionBtn;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        inputData = findViewById(R.id.Write_Text);
         takeSurvey = findViewById(R.id.surveyBtn);
         sendDataBtn = findViewById(R.id.button2);
         startConnectionBtn = findViewById(R.id.startConnection);
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         sendDataBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Send_data();
+                Send_data(inputData.getText().toString());
             }
         });
 
@@ -93,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             EditText editText = findViewById(R.id.Write_Text);
             editText.setText(toNumber);
             start_connection();
-            Send_data();
+            Send_data(toNumber);
         }
 
         //This code enables Bluetooth if it isn't enabled
@@ -165,13 +167,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void Send_data (){
+    public void Send_data (String data){
         if(my_bs==null) {
             Toast.makeText(this, "Bluetooth connection is not made", Toast.LENGTH_SHORT).show();
             return;
         }
-        EditText editText = findViewById(R.id.Write_Text);
-        String data = editText.getText().toString();
         my_bs.write(data.getBytes());
     }
 
