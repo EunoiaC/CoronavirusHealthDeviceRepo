@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             EditText editText = findViewById(R.id.Write_Text);
             editText.setText(x);
             //start_connection();
-            Send_data(editText.getText().toString());
+            //Send_data(editText.getText().toString());
         }
 
         //This code enables Bluetooth if it isn't enabled
