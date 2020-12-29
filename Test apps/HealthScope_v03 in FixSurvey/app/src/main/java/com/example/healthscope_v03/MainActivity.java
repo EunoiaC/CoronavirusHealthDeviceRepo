@@ -92,10 +92,12 @@ public class MainActivity extends AppCompatActivity {
         if (i.getStringExtra("Question 1") != null){
             String toNumber = i.getStringExtra("Question 1") + i.getStringExtra("Question 2") + i.getStringExtra("Question 3");
             Log.d(TAG, "onCreate: " + toNumber);
-            EditText editText = findViewById(R.id.Write_Text);
-            editText.setText(toNumber);
+            int x = Integer.parseInt(toNumber);
+            Log.d(TAG, "onCreate: " + x);
+//            EditText editText = findViewById(R.id.Write_Text);
+//            editText.setText(x);
             start_connection();
-            Send_data(toNumber);
+            Send_data(String.valueOf(x));
         }
 
         //This code enables Bluetooth if it isn't enabled
