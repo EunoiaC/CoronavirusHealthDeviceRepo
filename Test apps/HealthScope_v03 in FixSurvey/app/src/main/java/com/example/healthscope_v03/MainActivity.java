@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int MESSAGE_TOAST = 2;
     public final static int REQUEST_ENABLE_BT = 1;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private Handler my_main_handler= new Handler();
+    private Handler my_main_handler = new Handler();
     BluetoothAdapter bta;                 //bluetooth stuff
     BluetoothSocket mmSocket;             //bluetooth stuff
     BluetoothDevice mmDevice;             //bluetooth stuff
@@ -78,10 +78,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ReadView =  findViewById(R.id.Read_Text);
+        ReadView = findViewById(R.id.Read_Text);
         WriteView = findViewById(R.id.Sent_Text);
         //This code check if the user device allows Bluetooth
-        bta= BluetoothAdapter.getDefaultAdapter();
+        bta = BluetoothAdapter.getDefaultAdapter();
         if (bta == null) {
             // Device doesn't support Bluetooth
             Toast.makeText(this, "This device does not support Bluetooth", Toast.LENGTH_SHORT).show();
@@ -89,15 +89,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Intent i = getIntent();
-        if (i.getStringExtra("Question 1") != null){
+        if (i.getStringExtra("Question 1") != null) {
             String toNumber = i.getStringExtra("Question 1") + i.getStringExtra("Question 2") + i.getStringExtra("Question 3");
             Log.d(TAG, "onCreate: " + toNumber);
             int x = Integer.parseInt(toNumber);
             Log.d(TAG, "onCreate: " + x);
-//            EditText editText = findViewById(R.id.Write_Text);
-//            editText.setText(x);
+            EditText editText = findViewById(R.id.Write_Text);
+            editText.setText(x);
             start_connection();
-            Send_data(String.valueOf(x));
+            Send_data(editText.getText().toString());
         }
 
         //This code enables Bluetooth if it isn't enabled
@@ -135,8 +135,7 @@ public class MainActivity extends AppCompatActivity {
           /*  final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,devices);
             pairedList.setAdapter(adapter);
         }*/
-        }
-        else {
+        } else {
             Toast.makeText(this, "Please pair a device", Toast.LENGTH_SHORT).show();
             //synchronizeData.setEnabled(false);
         }
@@ -157,20 +156,17 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             return;
         }
-        if(my_bs==null)
-        {
+        if (my_bs == null) {
             ConnectThread my_c_thread = new ConnectThread();
             new Thread(my_c_thread).start();
-            Toast.makeText(this,"Connected.",Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Toast.makeText(this,"Bluetooth connection is already completed!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Connected.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Bluetooth connection is already completed!", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void Send_data (String data){
-        if(my_bs==null) {
+    public void Send_data(String data) {
+        if (my_bs == null) {
             Toast.makeText(this, "Bluetooth connection is not made", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -191,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
             }
             mmSocket = tmp;
         }
+
         @Override
         public void run() {
             // Cancel discovery because it otherwise slows down the connection.
@@ -211,10 +208,11 @@ public class MainActivity extends AppCompatActivity {
 
             // The connection attempt succeeded. Perform work associated with
             // the connection in a separate thread.
-                    my_bs= new ConnectedThread();
-                    my_bs.start();
+            my_bs = new ConnectedThread();
+            my_bs.start();
 
         }
+
         // Closes the client socket and causes the thread to finish.
         public void cancel() {
             try {
@@ -230,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
         InputStream mmInStream;
         OutputStream mmOutStream;
         String str;
+
         ConnectedThread() {
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
@@ -250,9 +249,10 @@ public class MainActivity extends AppCompatActivity {
             mmInStream = tmpIn;
             mmOutStream = tmpOut;
         }
+
         @Override
         public void run() {
-           mmBuffer = new byte[1024];
+            mmBuffer = new byte[1024];
             int numBytes; // bytes returned from read()
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                 } catch (IOException e) {
-                    Log.d(TAG,"Read handler failed");
+                    Log.d(TAG, "Read handler failed");
                 }
 
                 /*try {
@@ -308,18 +308,18 @@ public class MainActivity extends AppCompatActivity {
                 my_main_handler.sendMessage(writeErrorMsg);
             }*/
 
-           try {
-               mmOutStream.write(bytes);
-               my_main_handler.post(new Runnable() {
-                   @Override
-                   public void run() {
-                       str = new String(bytes, StandardCharsets.UTF_8);
-                       WriteView.setText(str);
-                   }
-               });
-           }catch (IOException e){
-            Log.d(TAG,"Write handler failed");
-           }
+            try {
+                mmOutStream.write(bytes);
+                my_main_handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        str = new String(bytes, StandardCharsets.UTF_8);
+                        WriteView.setText(str);
+                    }
+                });
+            } catch (IOException e) {
+                Log.d(TAG, "Write handler failed");
+            }
         }
 
         // Call this method from the main activity to shut down the connection.
