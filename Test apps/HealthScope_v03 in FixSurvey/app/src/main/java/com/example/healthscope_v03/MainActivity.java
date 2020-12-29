@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: " + x);
             EditText editText = findViewById(R.id.Write_Text);
             editText.setText(x);
-            start_connection();
+            //start_connection();
             Send_data(editText.getText().toString());
         }
 
