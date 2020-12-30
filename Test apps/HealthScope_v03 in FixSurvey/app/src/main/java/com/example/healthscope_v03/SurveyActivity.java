@@ -2,6 +2,7 @@ package com.example.healthscope_v03;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -26,15 +27,31 @@ public class SurveyActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (q1.getAnswer().equals("Not answered") || q2.getAnswer().equals("Not answered") || q3.getAnswer().equals("Not answered")){
+                if (q1.getAnswer() == 3 || q2.getAnswer() == 3 || q3.getAnswer() == 3) {
                     Toast.makeText(SurveyActivity.this, "Please answer all the questions.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Toast.makeText(SurveyActivity.this, "Survey Completed.", Toast.LENGTH_SHORT).show();
                 Intent i = new Intent(SurveyActivity.this, MainActivity.class);
-                i.putExtra("Question 1", q1.getAnswer());
-                i.putExtra("Question 2", q2.getAnswer());
-                i.putExtra("Question 3", q3.getAnswer());
+                int finalAnswers = 0;
+                if (q1.getAnswer() == 2){
+                    finalAnswers = 200;
+                } else {
+                    finalAnswers = 100;
+                }
+                if (q2.getAnswer() == 2){
+                    finalAnswers = finalAnswers + 20;
+                } else{
+                    finalAnswers = finalAnswers + 10;
+                }
+                if (q3.getAnswer() == 2){
+                    finalAnswers = finalAnswers + 2;
+                } else {
+                    finalAnswers = finalAnswers + 1;
+                }
+
+                Log.d("Survey Results", "onClick: " + finalAnswers);
+                i.putExtra("Survey Results", finalAnswers);
                 startActivity(i);
             }
         });

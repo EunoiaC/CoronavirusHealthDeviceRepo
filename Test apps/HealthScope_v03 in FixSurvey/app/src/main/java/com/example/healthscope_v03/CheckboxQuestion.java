@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 
 public class CheckboxQuestion extends LinearLayout {
 
-    private String buttonClicked = "Not answered";
+    private int buttonClicked = 3;
 
     public CheckboxQuestion(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -54,7 +54,7 @@ public class CheckboxQuestion extends LinearLayout {
             public void onClick(View v) {
                 no.setChecked(false);
                 yes.setChecked(true);
-                buttonClicked = "1";
+                buttonClicked = 2;
             }
         });
 
@@ -63,12 +63,12 @@ public class CheckboxQuestion extends LinearLayout {
             public void onClick(View v) {
                 no.setChecked(true);
                 yes.setChecked(false);
-                buttonClicked = "0";
+                buttonClicked = 1;
             }
         });
     }
 
-    String getAnswer(){
+    int getAnswer(){
         return buttonClicked;
     }
 

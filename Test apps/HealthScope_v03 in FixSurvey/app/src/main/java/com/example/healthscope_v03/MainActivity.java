@@ -89,15 +89,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Intent i = getIntent();
-        if (i.getStringExtra("Question 1") != null) {
-            String toNumber = i.getStringExtra("Question 1") + i.getStringExtra("Question 2") + i.getStringExtra("Question 3");
-            Log.d(TAG, "onCreate: " + toNumber);
-            int x = Integer.parseInt(toNumber);
-            Log.d(TAG, "onCreate: " + x);
-            EditText editText = findViewById(R.id.Write_Text);
-            editText.setText(x);
-            //start_connection();
-            //Send_data(editText.getText().toString());
+        if (i.getIntExtra("Survey Results", 0) != 0) {
+            String sendValue = Integer.toString(i.getIntExtra("Survey Results", 0));
+            connect_and_send(sendValue);
         }
 
         //This code enables Bluetooth if it isn't enabled
@@ -160,6 +154,23 @@ public class MainActivity extends AppCompatActivity {
             ConnectThread my_c_thread = new ConnectThread();
             new Thread(my_c_thread).start();
             Toast.makeText(this, "Connected.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Bluetooth connection is already completed!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void connect_and_send(String send) {
+        // Check whether BT is on. Send request to enable it If it is off.
+        if (!bta.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            return;
+        }
+        if (my_bs == null) {
+            ConnectThread my_c_thread = new ConnectThread();
+            new Thread(my_c_thread).start();
+            Toast.makeText(this, "Connected.", Toast.LENGTH_SHORT).show();
+            Send_data(send);
         } else {
             Toast.makeText(this, "Bluetooth connection is already completed!", Toast.LENGTH_SHORT).show();
         }
