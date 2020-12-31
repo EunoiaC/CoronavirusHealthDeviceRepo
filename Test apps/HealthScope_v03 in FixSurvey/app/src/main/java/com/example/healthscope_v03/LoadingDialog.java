@@ -7,17 +7,19 @@ import android.view.LayoutInflater;
 public class LoadingDialog {
 
     private Activity activity;
+    private int layout;
     private AlertDialog dialog;
 
-    LoadingDialog(Activity myActivity) {
+    LoadingDialog(Activity myActivity, int myLayout) {
         activity = myActivity;
+        layout = myLayout;
     }
 
     void starLoadingAlertDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         LayoutInflater inflater = activity.getLayoutInflater();
-        builder.setView(inflater.inflate(R.layout.loading_dialog, null));
+        builder.setView(inflater.inflate(layout, null));
         builder.setCancelable(false);
 
         dialog = builder.create();

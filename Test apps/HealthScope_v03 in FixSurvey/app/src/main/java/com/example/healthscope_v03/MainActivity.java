@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     BluetoothSocket mmSocket;             //bluetooth stuff
     BluetoothDevice mmDevice;             //bluetooth stuff
     ConnectedThread my_bs;
-
+    public LoadingDialog dialog;
     EditText inputData;
     TextView ReadView;
     TextView WriteView;
@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
         takeSurvey = findViewById(R.id.surveyBtn);
         sendDataBtn = findViewById(R.id.button2);
         startConnectionBtn = findViewById(R.id.startConnection);
+
+        dialog = new LoadingDialog(MainActivity.this, R.layout.connecting_dialog);
+        dialog.starLoadingAlertDialog();
 
         startConnectionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 if (deviceName.equals("HC-06")) {
                     //Connection specific to hc06 module
                     mmDevice = bta.getRemoteDevice(deviceHardwareAddress);
+                    dialog.dismissDialog();
                     //Setting mUUID to the mac address of hc06
                     Toast.makeText(this, "Connected to " + mmDevice.getName(), Toast.LENGTH_SHORT).show();
                     break;
@@ -142,6 +146,41 @@ public class MainActivity extends AppCompatActivity {
     }
 
  */
+    public void refreshConnection(View view){
+        //dialog.dismissDialog();
+        //Device is activated (if it wasn't), and paired.
+        Set<BluetoothDevice> pairedDevices = bta.getBondedDevices();
+        ArrayList<String> devices = new ArrayList<>();
+        if (pairedDevices.size() > 0) {
+            // There are paired devices. Get the name and address of each paired device.
+            for (BluetoothDevice device : pairedDevices) {
+                String deviceName = device.getName();
+                String deviceHardwareAddress = device.getAddress(); // MAC address
+                Log.d(TAG, "onCreate: " + deviceName);
+                devices.add(deviceName);
+                devices.add(deviceHardwareAddress);
+                if (deviceName.equals("HC-06")) {
+                    //Connection specific to hc06 module
+                    mmDevice = bta.getRemoteDevice(deviceHardwareAddress);
+                    dialog.dismissDialog();
+                    //Setting mUUID to the mac address of hc06
+                    Toast.makeText(this, "Connected to " + mmDevice.getName(), Toast.LENGTH_SHORT).show();
+                    break;
+                }
+            }
+
+            if (!devices.contains("HC-06")) {
+                Toast.makeText(this, "Not connected to HC-06", Toast.LENGTH_SHORT).show();
+                //synchronizeData.setEnabled(false);
+            }
+          /*  final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,devices);
+            pairedList.setAdapter(adapter);
+        }*/
+        } else {
+            Toast.makeText(this, "No devices were found.", Toast.LENGTH_SHORT).show();
+            //synchronizeData.setEnabled(false);
+        }
+    }
 
     public void start_connection() {
         // Check whether BT is on. Send request to enable it If it is off.
