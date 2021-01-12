@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
             //synchronizeData.setEnabled(false);
         }
     }
+
     // Oncreate ends here
 /*
     public void start_survey(View view){
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
  */
-    public void refreshConnection(View view){
+    public void refreshConnection(View view) {
         //dialog.dismissDialog();
         //Device is activated (if it wasn't), and paired.
         Set<BluetoothDevice> pairedDevices = bta.getBondedDevices();
