@@ -1,6 +1,5 @@
 package com.example.healthscope_v03;
 
-import androidx.annotation.RequiresPermission;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.bluetooth.BluetoothAdapter;
@@ -9,24 +8,24 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.dx.dxloadingbutton.lib.LoadingButton;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
+
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MY_APP_DEBUG_TAG";
@@ -37,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private Handler my_main_handler = new Handler();
     BluetoothAdapter bta;                 //bluetooth stuff
-    BluetoothSocket mmSocket;             //bluetooth stuff
+    BluetoothSocket mmSocket;
+
+
+    //bluetooth stuff
     BluetoothDevice mmDevice;             //bluetooth stuff
     ConnectedThread my_bs;
     public LoadingDialog dialog;

@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.healthscope_v03.CustomViews.CheckboxQuestion;
+
 public class SurveyActivity extends AppCompatActivity {
 
     CheckboxQuestion q1, q2, q3;

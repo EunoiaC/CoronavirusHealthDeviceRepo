@@ -1,4 +1,4 @@
-package com.example.healthscope_v03;
+package com.example.healthscope_v03.CustomViews;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+
+import com.example.healthscope_v03.R;
 
 public class CheckboxQuestion extends LinearLayout {
 
@@ -68,16 +70,16 @@ public class CheckboxQuestion extends LinearLayout {
         });
     }
 
-    int getAnswer(){
+    public int getAnswer(){
         return buttonClicked;
     }
 
-    void setQuestion(String question){
+    public void setQuestion(String question){
         TextView questionTitle = (TextView) findViewById(R.id.question_title);
         questionTitle.setText(question);
     }
 
-    void setQuestionNumber(String number){
+    public void setQuestionNumber(String number){
         TextView questionTitle = (TextView) findViewById(R.id.question_title);
         questionTitle.setText(number + ". ");
     }
