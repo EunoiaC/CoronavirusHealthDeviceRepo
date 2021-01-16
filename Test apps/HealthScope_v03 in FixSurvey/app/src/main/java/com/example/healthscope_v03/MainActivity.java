@@ -76,10 +76,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Log.d(TAG, "value of: " + String.valueOf(mmSocket));
+
         takeSurvey.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SurveyActivity.class));
+                Intent i = new Intent(MainActivity.this, SurveyActivity.class);
+                i.putExtra("Socket", String.valueOf(mmSocket));
+                startActivity(i);
             }
         });
 
