@@ -12,4 +12,6 @@
     <string name="_1_do_you_feel_tired">1. Do you feel tired?</string>
     <string name="submit_survey">Submit Survey</string>
     <string name="submit_results">Submit Results</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
