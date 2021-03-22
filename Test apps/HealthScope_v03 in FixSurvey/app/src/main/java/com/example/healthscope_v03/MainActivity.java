@@ -8,15 +8,12 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.dx.dxloadingbutton.lib.LoadingButton;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         startConnectionBtn = findViewById(R.id.startConnection);
 
         dialog = new LoadingDialog(MainActivity.this, R.layout.connecting_dialog);
-        dialog.starLoadingAlertDialog();
+        dialog.startLoadingAlertDialog();
 
         startConnectionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +153,14 @@ public class MainActivity extends AppCompatActivity {
     public void refreshConnection(View view) {
         //dialog.dismissDialog();
         //Device is activated (if it wasn't), and paired.
-        Set<BluetoothDevice> pairedDevices = bta.getBondedDevices();
+        Set<BluetoothDevice> pairedDevices;
+        try{
+            pairedDevices = bta.getBondedDevices();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "This device does not support bluetooth", Toast.LENGTH_SHORT).show();
+            return;
+        }
         ArrayList<String> devices = new ArrayList<>();
         if (pairedDevices.size() > 0) {
             // There are paired devices. Get the name and address of each paired device.
@@ -207,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void connect_and_send(String send) {
         // Check whether BT is on. Send request to enable it If it is off.
+        Log.d(TAG, "connect_and_send: Starting connection after survey");
         if (!bta.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
@@ -216,10 +221,10 @@ public class MainActivity extends AppCompatActivity {
             ConnectThread my_c_thread = new ConnectThread();
             new Thread(my_c_thread).start();
             Toast.makeText(this, "Connected.", Toast.LENGTH_SHORT).show();
-            Send_data(send);
         } else {
             Toast.makeText(this, "Bluetooth connection is already completed!", Toast.LENGTH_SHORT).show();
         }
+        Send_data(send);
     }
 
     public void Send_data(String data) {

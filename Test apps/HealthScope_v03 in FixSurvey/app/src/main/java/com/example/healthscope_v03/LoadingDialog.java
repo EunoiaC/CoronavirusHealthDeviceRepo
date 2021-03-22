@@ -15,7 +15,7 @@ public class LoadingDialog {
         layout = myLayout;
     }
 
-    public void starLoadingAlertDialog(){
+    public void startLoadingAlertDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
         LayoutInflater inflater = activity.getLayoutInflater();
