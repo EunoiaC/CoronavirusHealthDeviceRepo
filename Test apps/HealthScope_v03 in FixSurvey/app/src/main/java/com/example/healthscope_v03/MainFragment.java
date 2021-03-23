@@ -68,7 +68,7 @@ public class MainFragment extends Fragment {
         final View v = factory.inflate(R.layout.connecting_dialog, null);
 
         dialog = new LoadingDialog(getActivity(), v);
-        //dialog.startLoadingAlertDialog();
+        dialog.startLoadingAlertDialog();
 
         retryConnection = v.findViewById(R.id.retryConnection);
 
