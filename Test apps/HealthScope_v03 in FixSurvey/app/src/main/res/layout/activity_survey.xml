@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center|top"
     android:orientation="vertical"
-    tools:context=".SurveyActivity"
+    tools:context=".SurveyFragment"
     android:padding="10dp">
 
     <com.example.healthscope_v03.CustomViews.CheckboxQuestion
