@@ -330,7 +330,7 @@ public class MainFragment extends Fragment {
                                     temperatureCount++;
                                     if (temperatureCount == temperatures.length){
                                         temperatureCount = 0;
-                                        Toast.makeText(getActivity(), "Temperatures: " + Arrays.toString(temperatures), Toast.LENGTH_LONG).show();
+                                        ReadView.setText("Temperature array: " + Arrays.toString(temperatures));
                                         sendAndReceiveDataState = SendAndReceiveDataStates.NONE;
                                         break;
                                     }
