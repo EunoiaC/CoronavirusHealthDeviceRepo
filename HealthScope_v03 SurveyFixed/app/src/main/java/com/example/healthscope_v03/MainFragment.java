@@ -49,7 +49,7 @@ public class MainFragment extends Fragment {
     BluetoothAdapter bta;                 //bluetooth stuff
     BluetoothSocket mmSocket;
     Button retryConnection;
-    float temperatures[] = new float[24];
+    float temperatures[] = new float[432];
     int temperatureCount = 0;
 
     //bluetooth stuff
