@@ -1,5 +1,8 @@
 package com.example.healthscope_v03;
 
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,11 +13,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+
+import org.achartengine.ChartFactory;
+import org.achartengine.GraphicalView;
+import org.achartengine.chart.PointStyle;
+import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.model.XYSeries;
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer;
 
 import java.text.Format;
 import java.text.ParseException;
@@ -28,8 +40,13 @@ public class GraphFragment extends Fragment {
 
     float[] temps;
     Date[] dates;
+    XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+    XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
+    XYSeriesRenderer currentRenderer;
+    XYSeries series;
     Date tempDate;
-    GraphView graphView;
+    LinearLayout graphContainer;
+    GraphicalView graphicalView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,38 +59,45 @@ public class GraphFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tempDate = new Date(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(72));
+        graphContainer = getView().findViewById(R.id.tempGraph);
+
+        tempDate = new Date(System.currentTimeMillis() - (TimeUnit.HOURS.toMillis(71) + TimeUnit.MINUTES.toMillis(50)));
         Log.d("TAG", "startDate: " + tempDate);
 
-        graphView = getView().findViewById(R.id.tempGraph);
         temps = new float[432];
         generateRandomTemps();
-        DataPoint[] values = new DataPoint[temps.length];
-        for (int i = 0; i < temps.length; i++) {
-            values[i] = new DataPoint(i, temps[i]);
-        }
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(values);
-        graphView.getViewport().setScrollable(true);
-        graphView.getViewport().setMaxX(temps.length/4);
-        graphView.getViewport().setScalable(true);
-        graphView.addSeries(series);
-        //TODO: Rerender X values to cureent time - x and in for loop always change x - 10min. x starts as current time
-//        graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-//            @Override
-//            public String formatLabel(double value, boolean isValueX) {
-//                if (isValueX) {
-//                    Log.d("TAG", "formatLabel: " + value);
-//                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d HH:mm");
-//                    tempDate = new Date(tempDate.getTime() + TimeUnit.MINUTES.toMillis(10));
-//                    Log.d("TAG", "tempDate: " + tempDate);
-//                    return simpleDateFormat.format(tempDate);
-//                } else {
-//                    // return y label as number
-//                    return super.formatLabel(value, isValueX); // let the y-value be normal-formatted
-//                }
-//            }
-//        });
 
+        series = new XYSeries("Temp Graph");
+        currentRenderer = new XYSeriesRenderer();
+
+        for (int i = 0; i < temps.length; i++) {
+            series.add(i, temps[i]);
+        }
+        dataset.addSeries(series);
+
+        currentRenderer.setLineWidth(4);
+
+        renderer.addSeriesRenderer(currentRenderer);
+        renderer.setShowGrid(true);
+        renderer.setPanEnabled(true);
+        renderer.setLabelsTextSize(50);
+        renderer.setYLabelsColor(0, Color.RED);
+        renderer.setYLabelsAlign(Paint.Align.CENTER);
+        renderer.setMarginsColor(Color.WHITE);
+        renderer.setMargins(new int[]{10, 50, 50, 10});
+        renderer.setXLabelsPadding(50);
+
+        for(int i = 0; i < temps.length; i++){
+            SimpleDateFormat sf = new SimpleDateFormat("HH:mm");
+            Log.d("TAG", "rerenderingX: " + i + " " + tempDate + " " + temps[i] + " " + sf.format(tempDate));
+            renderer.addXTextLabel(i, sf.format(tempDate));
+            tempDate = new Date(tempDate.getTime() + TimeUnit.MINUTES.toMillis(10));
+        }
+
+        renderer.zoom
+
+        graphicalView = ChartFactory.getLineChartView(getActivity(), dataset, renderer);
+        graphContainer.addView(graphicalView);
     }
 
     void generateRandomTemps() {
