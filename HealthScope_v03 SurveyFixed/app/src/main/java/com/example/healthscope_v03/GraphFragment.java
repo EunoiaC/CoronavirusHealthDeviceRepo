@@ -94,7 +94,7 @@ public class GraphFragment extends Fragment {
             tempDate = new Date(tempDate.getTime() + TimeUnit.MINUTES.toMillis(10));
         }
 
-        renderer.zoom
+        
 
         graphicalView = ChartFactory.getLineChartView(getActivity(), dataset, renderer);
         graphContainer.addView(graphicalView);
