@@ -22,13 +22,23 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 
 
+
+
 public class MainFragment extends Fragment {
+
+    enum SendAndReceiveDataStates{
+        RECEIVE_TEMPERATURES,
+        NONE
+    }
+
     private static final String TAG = "MY_APP_DEBUG_TAG";
     public static final int MESSAGE_READ = 0;
     public static final int MESSAGE_WRITE = 1;
@@ -39,7 +49,8 @@ public class MainFragment extends Fragment {
     BluetoothAdapter bta;                 //bluetooth stuff
     BluetoothSocket mmSocket;
     Button retryConnection;
-
+    float temperatures[] = new float[432];
+    int temperatureCount = 0;
 
     //bluetooth stuff
     BluetoothDevice mmDevice;             //bluetooth stuff
@@ -48,7 +59,8 @@ public class MainFragment extends Fragment {
     EditText inputData;
     TextView ReadView;
     TextView WriteView;
-    Button takeSurvey, sendDataBtn, startConnectionBtn;
+    SendAndReceiveDataStates sendAndReceiveDataState = SendAndReceiveDataStates.NONE;
+    Button takeSurvey, sendDataBtn, startConnectionBtn, viewGraph;
 
     @Nullable
     @Override
@@ -62,15 +74,28 @@ public class MainFragment extends Fragment {
         inputData = getView().findViewById(R.id.Write_Text);
         takeSurvey = getView().findViewById(R.id.surveyBtn);
         sendDataBtn = getView().findViewById(R.id.button2);
+        viewGraph = getView().findViewById(R.id.viewGraph);
         startConnectionBtn = getView().findViewById(R.id.startConnection);
+
+        Log.d(TAG, "onViewCreated: " + temperatureCount + temperatures.length);
 
         final LayoutInflater factory = getLayoutInflater();
         final View v = factory.inflate(R.layout.connecting_dialog, null);
 
         dialog = new LoadingDialog(getActivity(), v);
-        dialog.startLoadingAlertDialog();
+        //dialog.startLoadingAlertDialog();
 
         retryConnection = v.findViewById(R.id.retryConnection);
+
+        viewGraph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                sendAndReceiveDataState = SendAndReceiveDataStates.RECEIVE_TEMPERATURES;
+//                Send_data("AAAAA"); //Trigger code for arduino
+                ((MainActivity) getActivity()).startGraph();
+
+            }
+        });
 
         retryConnection.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -300,6 +325,17 @@ public class MainFragment extends Fragment {
                         public void run() {
                             str = new String(mmBuffer, StandardCharsets.UTF_8);
                             ReadView.setText(str);
+                            switch (sendAndReceiveDataState){
+                                case RECEIVE_TEMPERATURES:
+                                    temperatures[temperatureCount] = Integer.parseInt(str) / 10;
+                                    temperatureCount++;
+                                    if (temperatureCount == temperatures.length){
+                                        temperatureCount = 0;
+                                        ReadView.setText("Temperature array: " + Arrays.toString(temperatures));
+                                        sendAndReceiveDataState = SendAndReceiveDataStates.NONE;
+                                        break;
+                                    }
+                            }
                         }
                     });
                 } catch (IOException e) {
