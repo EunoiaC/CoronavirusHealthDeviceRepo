@@ -56,12 +56,9 @@ public class GraphFragment extends Fragment {
             dates.add(tempDate);
             tempDate = new Date(tempDate.getTime() + TimeUnit.MINUTES.toMillis(10));
         }
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(values);
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(values);
         graphView.getViewport().setScrollable(true);
         graphView.getViewport().setMaxX(temps.length/4);
-        graphView.getViewport().setScalable(true);
-        graphView.addSeries(series);
-        //TODO: Rerender X values to cureent time - x and in for loop always change x - 10min. x starts as current time
         graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
@@ -72,10 +69,13 @@ public class GraphFragment extends Fragment {
                     return simpleDateFormat.format(dates.get((int) value));
                 } else {
                     // return y label as number
-                    return super.formatLabel(value, isValueX); // let the y-value be normal-formatted
+                    return super.formatLabel(value, isValueX) + "°C"; // let the y-value be normal-formatted
                 }
             }
         });
+        graphView.getViewport().setScalable(true);
+        graphView.addSeries(series);
+
 
     }
 
