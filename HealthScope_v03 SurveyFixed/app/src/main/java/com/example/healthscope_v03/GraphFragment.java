@@ -19,6 +19,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -49,8 +50,11 @@ public class GraphFragment extends Fragment {
         temps = new float[432];
         generateRandomTemps();
         DataPoint[] values = new DataPoint[temps.length];
+        ArrayList<Date> dates = new ArrayList<>();
         for (int i = 0; i < temps.length; i++) {
             values[i] = new DataPoint(i, temps[i]);
+            dates.add(tempDate);
+            tempDate = new Date(tempDate.getTime() + TimeUnit.MINUTES.toMillis(10));
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(values);
         graphView.getViewport().setScrollable(true);
@@ -58,21 +62,20 @@ public class GraphFragment extends Fragment {
         graphView.getViewport().setScalable(true);
         graphView.addSeries(series);
         //TODO: Rerender X values to cureent time - x and in for loop always change x - 10min. x starts as current time
-//        graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
-//            @Override
-//            public String formatLabel(double value, boolean isValueX) {
-//                if (isValueX) {
-//                    Log.d("TAG", "formatLabel: " + value);
-//                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("d HH:mm");
-//                    tempDate = new Date(tempDate.getTime() + TimeUnit.MINUTES.toMillis(10));
-//                    Log.d("TAG", "tempDate: " + tempDate);
-//                    return simpleDateFormat.format(tempDate);
-//                } else {
-//                    // return y label as number
-//                    return super.formatLabel(value, isValueX); // let the y-value be normal-formatted
-//                }
-//            }
-//        });
+        graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                if (isValueX) {
+                    Log.d("TAG", "formatLabel: " + value);
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+                    Log.d("TAG", "tempDate: " + dates.get((int) value));
+                    return simpleDateFormat.format(dates.get((int) value));
+                } else {
+                    // return y label as number
+                    return super.formatLabel(value, isValueX); // let the y-value be normal-formatted
+                }
+            }
+        });
 
     }
 
