@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".GraphFragment">
 
-    <LinearLayout
+    <com.jjoe64.graphview.GraphView
         android:id="@+id/tempGraph"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
