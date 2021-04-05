@@ -58,7 +58,8 @@ public class GraphFragment extends Fragment {
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(values);
         graphView.getViewport().setScrollable(true);
-        graphView.getViewport().setMaxX(temps.length/4);
+//        graphView.getViewport().setMaxXAxisSize(432);
+        graphView.getViewport().setMaxX(temps.length);
         graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
             public String formatLabel(double value, boolean isValueX) {
@@ -81,8 +82,9 @@ public class GraphFragment extends Fragment {
 
     void generateRandomTemps() {
         for (int i = 0; i < temps.length; i++) {
-            temps[i] = (new Random().nextFloat() % 4) + 35;
-            Log.d("TAG", "generateRandomTemps: " + temps[i]);
+            double randomNum = 4 + new Random().nextDouble() * (50 - 4);
+            temps[i] = (float) ((randomNum % 4) + 35);
+            Log.d("TAG", "generateRandomTemps: " + temps[i] + " " + randomNum);
         }
     }
 }
