@@ -31,20 +31,34 @@ import org.achartengine.renderer.XYSeriesRenderer;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Line;
+import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.model.ValueShape;
+import lecho.lib.hellocharts.model.Viewport;
+import lecho.lib.hellocharts.view.LineChartView;
 
 public class GraphFragment extends Fragment {
 
     float[] temps;
+    Axis axisY;
+    Axis axisX;
     Date[] dates;
     XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
     XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
     XYSeriesRenderer currentRenderer;
     XYSeries series;
     Date tempDate;
+    GraphView graphView;
     LinearLayout graphContainer;
     GraphicalView graphicalView;
 
@@ -59,6 +73,11 @@ public class GraphFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //TODO: Recreate following code with graphview lib
+        LineChartView lineChartView = new LineChartView(getActivity());
+        LineChartData lineChartData = new LineChartData();
+        lineChartView.setInteractive(true);
+
         graphContainer = getView().findViewById(R.id.tempGraph);
 
         tempDate = new Date(System.currentTimeMillis() - (TimeUnit.HOURS.toMillis(71) + TimeUnit.MINUTES.toMillis(50)));
@@ -67,37 +86,47 @@ public class GraphFragment extends Fragment {
         temps = new float[432];
         generateRandomTemps();
 
-        series = new XYSeries("Temp Graph");
-        currentRenderer = new XYSeriesRenderer();
+        List<PointValue> values = new ArrayList<PointValue>();
+        List<AxisValue> axisValuesX = new ArrayList<AxisValue>();
+        List<AxisValue> axisValuesY = new ArrayList<AxisValue>();
 
         for (int i = 0; i < temps.length; i++) {
-            series.add(i, temps[i]);
-        }
-        dataset.addSeries(series);
-
-        currentRenderer.setLineWidth(4);
-
-        renderer.addSeriesRenderer(currentRenderer);
-        renderer.setShowGrid(true);
-        renderer.setPanEnabled(true);
-        renderer.setLabelsTextSize(50);
-        renderer.setYLabelsColor(0, Color.RED);
-        renderer.setYLabelsAlign(Paint.Align.CENTER);
-        renderer.setMarginsColor(Color.WHITE);
-        renderer.setMargins(new int[]{10, 50, 50, 10});
-        renderer.setXLabelsPadding(50);
-
-        for(int i = 0; i < temps.length; i++){
             SimpleDateFormat sf = new SimpleDateFormat("HH:mm");
+            values.add(new PointValue(i, temps[i]));
             Log.d("TAG", "rerenderingX: " + i + " " + tempDate + " " + temps[i] + " " + sf.format(tempDate));
-            renderer.addXTextLabel(i, sf.format(tempDate));
+            axisValuesX.add(new AxisValue(i).setLabel(sf.format(tempDate)));
+            axisValuesY.add(new AxisValue(temps[i]).setLabel(String.valueOf(temps[i]).substring(0, 4)));
             tempDate = new Date(tempDate.getTime() + TimeUnit.MINUTES.toMillis(10));
         }
+        Line line = new Line(values).setColor(Color.parseColor("#FFCD41"));  //The color of the broken line (orange)
+        List<Line> lines = new ArrayList<Line>();
+        line.setShape(ValueShape.CIRCLE);//The shape of each data point on a broken line chart is circular here (there are three kinds: ValueShape. SQUARE ValueShape. CIRCLE ValueShape. DIAMOND)
+        line.setCubic(false);//Whether the curve is smooth, that is, whether it is a curve or a broken line
+        line.setFilled(false);//Whether or not to fill the area of the curve
+        line.setHasLabels(false);//Whether to add notes to the data coordinates of curves
+//      Line. setHasLabels OnlyForSelected (true); // Click on the data coordinates to prompt the data (set this line.setHasLabels(true); invalid)
+        line.setHasLines(true);//Whether to display with line or not. If it is false, there is no curve but point display
+        line.setHasPoints(true);//Whether to display a dot if it is false, there is no origin but only a dot (each data point is a large dot)
+        lines.add(line);
 
-        
+        axisX = new Axis(axisValuesX);
+        axisY = new Axis(axisValuesY);
+        axisY.setMaxLabelChars(5);
+        axisX.setMaxLabelChars(5);
+        axisY.setTextSize(10);
+        lineChartData.setLines(lines);
+        lineChartData.setAxisYLeft(axisY);
+        lineChartData.setAxisXBottom(axisX);
+        float ymax = 4 + 10f;
+        final Viewport v = new Viewport(lineChartView.getMaximumViewport());
+        v.top = ymax; //max value
+        v.bottom = 0f;  //min value
+        lineChartView.setMaximumViewport(v);
+        lineChartView.setCurrentViewport(v);
+        lineChartView.setLineChartData(lineChartData);
 
         graphicalView = ChartFactory.getLineChartView(getActivity(), dataset, renderer);
-        graphContainer.addView(graphicalView);
+        graphContainer.addView(lineChartView);
     }
 
     void generateRandomTemps() {

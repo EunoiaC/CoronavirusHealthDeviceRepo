@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
+    compile 'com.github.lecho:hellocharts-android:v1.5.8'
     implementation 'com.jjoe64:graphview:4.2.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.github.StevenDXC:DxLoadingButton:2.4'
