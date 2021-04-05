@@ -74,7 +74,7 @@ public class MainFragment extends Fragment {
         inputData = getView().findViewById(R.id.Write_Text);
         takeSurvey = getView().findViewById(R.id.surveyBtn);
         sendDataBtn = getView().findViewById(R.id.button2);
-        viewGraph = getView().findViewById(R.id.viewGraoh);
+        viewGraph = getView().findViewById(R.id.viewGraph);
         startConnectionBtn = getView().findViewById(R.id.startConnection);
 
         Log.d(TAG, "onViewCreated: " + temperatureCount + temperatures.length);
@@ -83,15 +83,16 @@ public class MainFragment extends Fragment {
         final View v = factory.inflate(R.layout.connecting_dialog, null);
 
         dialog = new LoadingDialog(getActivity(), v);
-        dialog.startLoadingAlertDialog();
+        //dialog.startLoadingAlertDialog();
 
         retryConnection = v.findViewById(R.id.retryConnection);
 
         viewGraph.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendAndReceiveDataState = SendAndReceiveDataStates.RECEIVE_TEMPERATURES;
-                Send_data("AAAAA"); //Trigger code for arduino
+//                sendAndReceiveDataState = SendAndReceiveDataStates.RECEIVE_TEMPERATURES;
+//                Send_data("AAAAA"); //Trigger code for arduino
+                ((MainActivity) getActivity()).startGraph();
 
             }
         });
