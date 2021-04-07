@@ -11,11 +11,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 import java.text.Format;
 import java.text.ParseException;
@@ -44,6 +48,8 @@ public class GraphFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+
         tempDate = new Date(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(72));
         Log.d("TAG", "startDate: " + tempDate);
 
@@ -62,6 +68,12 @@ public class GraphFragment extends Fragment {
         graphView.setTitle("Body Temperature for Last 3 Days");
         graphView.setTitleTextSize(50);
         graphView.setTitleColor(Color.RED);
+        series.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                Toast.makeText(getActivity(), "Clicked on: temp = " + dataPoint.getY() + " time = " + simpleDateFormat.format(dates.get((int) dataPoint.getX())), Toast.LENGTH_LONG).show();
+            }
+        });
         graphView.getViewport().setYAxisBoundsManual(true);
         graphView.getViewport().setMaxY(50);
         graphView.getViewport().setMinY(25);
@@ -71,7 +83,6 @@ public class GraphFragment extends Fragment {
             public String formatLabel(double value, boolean isValueX) {
                 if (isValueX) {
                     Log.d("TAG", "formatLabel: " + value);
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
                     Log.d("TAG", "tempDate: " + dates.get((int) value));
                     return simpleDateFormat.format(dates.get((int) value));
                 } else {
