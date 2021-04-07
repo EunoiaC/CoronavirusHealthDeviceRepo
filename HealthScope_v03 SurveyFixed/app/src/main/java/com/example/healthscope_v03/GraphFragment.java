@@ -1,5 +1,6 @@
 package com.example.healthscope_v03;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -58,7 +59,12 @@ public class GraphFragment extends Fragment {
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(values);
         graphView.getViewport().setScrollable(true);
-//        graphView.getViewport().setMaxXAxisSize(432);
+        graphView.setTitle("Body Temperature for Last 3 Days");
+        graphView.setTitleTextSize(50);
+        graphView.setTitleColor(Color.RED);
+        graphView.getViewport().setYAxisBoundsManual(true);
+        graphView.getViewport().setMaxY(50);
+        graphView.getViewport().setMinY(25);
         graphView.getViewport().setMaxX(temps.length);
         graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
@@ -76,14 +82,12 @@ public class GraphFragment extends Fragment {
         });
         graphView.getViewport().setScalable(true);
         graphView.addSeries(series);
-
-
     }
 
     void generateRandomTemps() {
         for (int i = 0; i < temps.length; i++) {
-            double randomNum = 4 + new Random().nextDouble() * (50 - 4);
-            temps[i] = (float) ((randomNum % 4) + 35);
+            double randomNum = 35 + new Random().nextDouble() * (40 - 35);
+            temps[i] = (float) randomNum;
             Log.d("TAG", "generateRandomTemps: " + temps[i] + " " + randomNum);
         }
     }
