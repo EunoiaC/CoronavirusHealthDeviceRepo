@@ -1,12 +1,17 @@
 package com.example.healthscope_v03;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentContainerView;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         linearLayout = findViewById(R.id.fragmentLinearLayout);
         fragmentContainerView = new FragmentContainerView(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-        fragmentContainerView.setId(11223);
+        fragmentContainerView.setId(View.generateViewId());
         linearLayout.addView(fragmentContainerView, lp);
 
         mainFragment = new MainFragment();
@@ -45,5 +50,23 @@ public class MainActivity extends AppCompatActivity {
     public void startSurvey() {
         surveyFragment = new SurveyFragment();
         getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), surveyFragment).hide(mainFragment).show(surveyFragment).commit();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.example_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sub_item1:
+                Toast.makeText(this, "Item1 is Selected", Toast.LENGTH_SHORT).show();
+            case R.id.sub_item2:
+                Toast.makeText(this, "Item2 is Selected", Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

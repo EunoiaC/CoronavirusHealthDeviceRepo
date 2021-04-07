@@ -148,22 +148,7 @@ public class MainFragment extends Fragment {
         refreshConnection();    //Establishes connection.
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.example_menu,menu);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.sub_item1:
-                Toast.makeText(getActivity(), "Item1 is Selected", Toast.LENGTH_SHORT).show();
-            case R.id.sub_item2:
-                Toast.makeText(getActivity(), "Item2 is Selected", Toast.LENGTH_SHORT).show();
-        }
-        return super.onOptionsItemSelected(item);
-    }
     //hello
     /////////////////////////////////////////////////////////////////////////////////////
     //                              OnCreate ENDS HERE                                 //
