@@ -3,5 +3,6 @@
     <declare-styleable name="CheckboxQuestion">
         <attr name="questionTitle" format="string" />
         <attr name="questionNumber" format="string" />
+        <attr name="numberEnabled" format="boolean"/>
     </declare-styleable>
 </resources>

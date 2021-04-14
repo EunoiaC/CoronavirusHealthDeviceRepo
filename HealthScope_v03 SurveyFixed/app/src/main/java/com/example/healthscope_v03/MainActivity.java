@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     FragmentContainerView fragmentContainerView;
     LinearLayout linearLayout;
     Button viewGraph;
+    SettingsFragment settingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main2);
 
         linearLayout = findViewById(R.id.fragmentLinearLayout);
+        settingsFragment = new SettingsFragment();
         fragmentContainerView = new FragmentContainerView(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         fragmentContainerView.setId(View.generateViewId());
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sub_item1:
-                Toast.makeText(this, "Item1 is Selected", Toast.LENGTH_SHORT).show();
+                getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), settingsFragment).hide(mainFragment).commit();
             case R.id.sub_item2:
                 Toast.makeText(this, "Item2 is Selected", Toast.LENGTH_SHORT).show();
         }

@@ -24,25 +24,32 @@ public class CheckboxQuestion extends LinearLayout {
 
         String title;
         String number;
+        boolean numberEnabled;
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.CheckboxQuestion, 0, 0);
 
         try {
             title = a.getString(R.styleable.CheckboxQuestion_questionTitle);
             number = a.getString(R.styleable.CheckboxQuestion_questionNumber);
+            numberEnabled = a.getBoolean(R.styleable.CheckboxQuestion_numberEnabled, true);
         } finally {
             a.recycle();
         }
 
-        init(title, number);
+        init(title, number, numberEnabled);
     }
 
     // Setup views
-    private void init(String title, String number) {
+    private void init(String title, String number, boolean numEnabled) {
         TextView questionTitle = (TextView) findViewById(R.id.question_title);
         TextView questionNumber = (TextView) findViewById(R.id.question_number);
 
         questionTitle.setText(title);
-        questionNumber.setText(number + ". ");
+        if (numEnabled){
+            questionNumber.setText(number + ". ");
+            questionNumber.setVisibility(VISIBLE);
+        } else{
+            questionNumber.setVisibility(GONE);
+        }
     }
 
     @Override
