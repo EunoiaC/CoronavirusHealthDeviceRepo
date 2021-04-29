@@ -22,7 +22,7 @@ public class SurveyFragment extends Fragment {
 
     CheckboxQuestion q1, q2, q3;
     Button submit;
-    public char[] finalAnswers = new char[8];
+    public char[] finalAnswers = new char[4];
 
 
     @Nullable
@@ -48,29 +48,27 @@ public class SurveyFragment extends Fragment {
                     return;
                 }
 
-                for (int i=0;i<5;i++){
-                    finalAnswers[i]='X';
-                }
+                finalAnswers[0]='S';
 
                 //Checkbox  1 --> No,   2-->Yes,    3-->NotAnswered.
 
                 if (q1.getAnswer() == 2){
-                    finalAnswers[5]='1';   // Char '1' will be sent for answer Yes.
+                    finalAnswers[1]='1';   // Char '1' will be sent for answer Yes.
                 }
                 else{
-                    finalAnswers[5]='0';   // Char '0' will be sent for answer No.
+                    finalAnswers[1]='0';   // Char '0' will be sent for answer No.
                 }
                 if (q2.getAnswer() == 2){
-                    finalAnswers[6]='1';
+                    finalAnswers[2]='1';
                 }
                 else{
-                    finalAnswers[6]='0';
+                    finalAnswers[2]='0';
                 }
                 if (q3.getAnswer() == 2){
-                    finalAnswers[7]='1';
+                    finalAnswers[3]='1';
                 }
                 else{
-                    finalAnswers[7]='0';
+                    finalAnswers[3]='0';
                 }
 
                 Toast.makeText(getActivity(), "Survey Completed.", Toast.LENGTH_SHORT).show();
