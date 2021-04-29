@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CheckboxQuestion">
-        <attr name="questionTitle" format="string" />
+        <attr name="questionTitle" format="string" />z
         <attr name="questionNumber" format="string" />
+        <attr name="numberEnabled" format="boolean"/>
     </declare-styleable>
 </resources>

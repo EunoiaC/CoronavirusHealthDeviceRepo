@@ -7,8 +7,7 @@
         app:showAsAction="ifRoom">
         <menu>
             <item android:id="@+id/sub_item1"
-                android:title="Sub Item1"/>
-
+                android:title="Settings"/>
            <item    android:id="@+id/sub_item2"
                android:title="Sub_Item2"/>
         </menu>
