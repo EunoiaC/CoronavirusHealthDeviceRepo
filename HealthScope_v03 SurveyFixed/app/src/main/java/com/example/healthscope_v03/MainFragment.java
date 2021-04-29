@@ -86,7 +86,7 @@ public class MainFragment extends Fragment {
         final View v = factory.inflate(R.layout.connecting_dialog, null);
 
         dialog = new LoadingDialog(getActivity(), v);
-        //dialog.startLoadingAlertDialog();
+        dialog.startLoadingAlertDialog();
 
         retryConnection = v.findViewById(R.id.retryConnection);
 
@@ -156,7 +156,7 @@ public class MainFragment extends Fragment {
 
 
     public void refreshConnection() {
-        //dialog.dismissDialog();
+        dialog.dismissDialog();
         //Device is activated (if it wasn't), and paired.
         Set<BluetoothDevice> pairedDevices;
         try{
