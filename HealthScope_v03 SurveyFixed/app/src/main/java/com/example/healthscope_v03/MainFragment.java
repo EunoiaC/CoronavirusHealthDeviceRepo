@@ -3,6 +3,8 @@ package com.example.healthscope_v03;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -12,9 +14,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +53,8 @@ public class MainFragment extends Fragment {
     float temperatures[] = new float[432];
     int temperatureCount = 0;
 
+    MutableLiveData<Boolean> risk;
+
     //bluetooth stuff
     BluetoothDevice mmDevice;             //bluetooth stuff
     ConnectedThread my_bs;
@@ -68,7 +68,7 @@ public class MainFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_main, container, false);
+        return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
     @Override
@@ -85,8 +85,27 @@ public class MainFragment extends Fragment {
         final LayoutInflater factory = getLayoutInflater();
         final View v = factory.inflate(R.layout.connecting_dialog, null);
 
+        risk = new MutableLiveData<>();
+
+        risk.setValue(false); //Initilize with a value
+
+        TextView riskView = getView().findViewById(R.id.isSafe);
+
+        risk.observe(getActivity(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isAtRisk) {
+                if (isAtRisk){
+                    riskView.setText("At Risk");
+                    riskView.getBackground().setTint(getActivity().getColor(R.color.red));
+                } else{
+                    riskView.setText("Safe");
+                    riskView.getBackground().setTint(getActivity().getColor(R.color.green));
+                }
+            }
+        });
+
         dialog = new LoadingDialog(getActivity(), v);
-        dialog.startLoadingAlertDialog();
+        //dialog.startLoadingAlertDialog();
 
         retryConnection = v.findViewById(R.id.retryConnection);
 
@@ -237,6 +256,9 @@ public class MainFragment extends Fragment {
             Toast.makeText(getActivity(), "Bluetooth connection is not made", Toast.LENGTH_SHORT).show();
             return;
         }
+        if(data.equals("T")){
+            sendAndReceiveDataState = SendAndReceiveDataStates.RECEIVE_TEMPERATURES;
+        }
         my_bs.write(data.getBytes());
     }
 
@@ -330,16 +352,16 @@ public class MainFragment extends Fragment {
                         public void run() {
                             str = new String(mmBuffer, StandardCharsets.UTF_8);
                             ReadView.setText(str);
-                            switch (sendAndReceiveDataState){
+                            switch (sendAndReceiveDataState) {
                                 case RECEIVE_TEMPERATURES:
                                     temperatures[temperatureCount] = Integer.parseInt(str) / 10;
                                     temperatureCount++;
-                                    if (temperatureCount == temperatures.length){
+                                    if (temperatureCount == temperatures.length) {
                                         temperatureCount = 0;
                                         ReadView.setText("Temperature array: " + Arrays.toString(temperatures));
                                         sendAndReceiveDataState = SendAndReceiveDataStates.NONE;
-                                        break;
                                     }
+                                    break;
                             }
                         }
                     });

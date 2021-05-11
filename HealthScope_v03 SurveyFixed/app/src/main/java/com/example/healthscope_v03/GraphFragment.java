@@ -48,14 +48,25 @@ public class GraphFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        generateRandomTemps();
+
+    }
+
+    void generateRandomTemps() {
+        temps = new float[432];
+
+        for (int i = 0; i < temps.length; i++) {
+            double randomNum = 35 + new Random().nextDouble() * (40 - 35);
+            temps[i] = (float) randomNum;
+            Log.d("TAG", "generateRandomTemps: " + temps[i] + " " + randomNum);
+        }
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
 
         tempDate = new Date(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(72));
         Log.d("TAG", "startDate: " + tempDate);
 
         graphView = getView().findViewById(R.id.tempGraph);
-        temps = new float[432];
-        generateRandomTemps();
         DataPoint[] values = new DataPoint[temps.length];
         ArrayList<Date> dates = new ArrayList<>();
         for (int i = 0; i < temps.length; i++) {
@@ -80,26 +91,18 @@ public class GraphFragment extends Fragment {
         graphView.getViewport().setMaxX(temps.length);
         graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
             @Override
-            public String formatLabel(double value, boolean isValueX) {
-                if (isValueX) {
+            public String formatLabel(double value, boolean isValueInXAxis) {
+                if (isValueInXAxis) {
                     Log.d("TAG", "formatLabel: " + value);
                     Log.d("TAG", "tempDate: " + dates.get((int) value));
                     return simpleDateFormat.format(dates.get((int) value));
                 } else {
                     // return y label as number
-                    return super.formatLabel(value, isValueX) + "°C"; // let the y-value be normal-formatted
+                    return super.formatLabel(value, isValueInXAxis) + "°C"; // let the y-value be normal-formatted
                 }
             }
         });
         graphView.getViewport().setScalable(true);
         graphView.addSeries(series);
-    }
-
-    void generateRandomTemps() {
-        for (int i = 0; i < temps.length; i++) {
-            double randomNum = 35 + new Random().nextDouble() * (40 - 35);
-            temps[i] = (float) randomNum;
-            Log.d("TAG", "generateRandomTemps: " + temps[i] + " " + randomNum);
-        }
     }
 }

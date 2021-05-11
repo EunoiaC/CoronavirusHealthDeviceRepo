@@ -4,65 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     tools:context=".SettingsFragment">
 
-    <com.example.healthscope_v03.CustomViews.CheckboxQuestion
-        android:id="@+id/checkboxQuestion"
-        android:layout_width="wrap_content"
+    <Switch
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="Are you a smoker?"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:numberEnabled="false"
-        app:questionTitle="Are you a smoker?" />
-
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Birth date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkboxQuestion" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:maxLength="10"
-        android:hint="mm/dd/yyyy"
-        android:inputType="date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/textView4">-->
-
-<!--        <EditText-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:maxLength="2"-->
-<!--            android:inputType="number"-->
-<!--            android:gravity="center"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="mm"/>-->
-<!--        <EditText-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:maxLength="2"-->
-<!--            android:gravity="center"-->
-<!--            android:inputType="number"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="dd"/>-->
-<!--        <EditText-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:maxLength="4"-->
-<!--            android:gravity="center"-->
-<!--            android:inputType="number"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:hint="yyyy"/>-->
-<!--    </LinearLayout>-->
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
