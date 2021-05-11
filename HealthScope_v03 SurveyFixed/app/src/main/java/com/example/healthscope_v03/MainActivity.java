@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sub_item1:
+                settingsFragment = new SettingsFragment();
                 getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), settingsFragment).hide(mainFragment).commit();
                 break;
             case R.id.sub_item2:

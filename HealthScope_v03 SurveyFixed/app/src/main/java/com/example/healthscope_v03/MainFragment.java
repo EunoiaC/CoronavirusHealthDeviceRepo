@@ -60,7 +60,6 @@ public class MainFragment extends Fragment {
     //bluetooth stuff
     BluetoothDevice mmDevice;             //bluetooth stuff
     ConnectedThread my_bs;
-    public LoadingDialog dialog;
     EditText inputData;
     TextView ReadView;
     TextView WriteView;
@@ -106,7 +105,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        dialog = new LoadingDialog(getActivity(), v);
         //dialog.startLoadingAlertDialog();
 
         retryConnection = v.findViewById(R.id.retryConnection);
@@ -177,7 +175,6 @@ public class MainFragment extends Fragment {
 
 
     public void refreshConnection() {
-        dialog.dismissDialog();
         //Device is activated (if it wasn't), and paired.
         Set<BluetoothDevice> pairedDevices;
         try{
@@ -199,7 +196,6 @@ public class MainFragment extends Fragment {
                 if (deviceName.equals("HC-06")) {
                     //Connection specific to hc06 module
                     mmDevice = bta.getRemoteDevice(deviceHardwareAddress);
-                    dialog.dismissDialog();
                     //Setting mUUID to the mac address of hc06
                     Toast.makeText(getActivity(), "Connected to " + mmDevice.getName(), Toast.LENGTH_SHORT).show();
                     break;
