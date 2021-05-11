@@ -37,6 +37,8 @@ public class MainFragment extends Fragment {
 
     enum SendAndReceiveDataStates{
         RECEIVE_TEMPERATURES,
+        RECEIVE_RISK,
+        SURVEY_REQUEST,
         NONE
     }
 
@@ -363,6 +365,7 @@ public class MainFragment extends Fragment {
                                     }
                                     break;
                             }
+
                         }
                     });
                 } catch (IOException e) {
