@@ -41,8 +41,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), mainFragment).commit();
     }
 
-    public void startMain(){
+    public void startMainKillSurvey(){
         getSupportFragmentManager().beginTransaction().hide(surveyFragment).show(mainFragment).commit();
+    }
+
+    public void startMainKillSettings(){
+        getSupportFragmentManager().beginTransaction().hide(settingsFragment).show(mainFragment).commit();
     }
 
     public void startGraph(){

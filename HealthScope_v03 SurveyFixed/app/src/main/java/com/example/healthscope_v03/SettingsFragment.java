@@ -35,7 +35,7 @@ public class SettingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        char[] data = new char[24];
+        char[] data = new char[6];
 
         data[0] = 'U';
 
@@ -66,10 +66,29 @@ public class SettingsFragment extends Fragment {
 
                 data[1] = gender.getSelectedAnswer() == 1 ? '1': '0';
                 data[2] = isSmoker.getSelectedAnswer() == 1 ? '1': '0';
-                data[3] = (char) s.getSelectedItem();
-                data[4] = hasDisease.getSelectedAnswer() == 1 ? '1' : '0';
+                if((Integer) s.getSelectedItem()<10) {
+                    data[3] = '0';
+                    data[4] = Character.forDigit((Integer) s.getSelectedItem(), 10);
+
+                }
+                else {
+                    char[] temp;
+                    temp = String.valueOf((Integer) s.getSelectedItem()).toCharArray();
+                    data[3] = temp[0];
+                    data[4] = temp[1];
+                }
+
+                data[5] = hasDisease.getSelectedAnswer() == 1 ? '1' : '0';
+
 
                 Log.d("TAG", "onClick: " + Arrays.toString(data));
+                Toast.makeText(getActivity(), "User Initialization is Completed.", Toast.LENGTH_SHORT).show();
+                for(int i=0;i<data.length;i++)
+                {
+                    ((MainActivity) getActivity()).mainFragment.Send_data(String.valueOf(data[i]));
+                }
+
+                ((MainActivity) getActivity()).startMainKillSettings();
             }
         });
 

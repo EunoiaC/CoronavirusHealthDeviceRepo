@@ -77,7 +77,7 @@ public class SurveyFragment extends Fragment {
                     ((MainActivity) getActivity()).mainFragment.Send_data(String.valueOf(finalAnswers[i]));
                 }
 
-                ((MainActivity) getActivity()).startMain();
+                ((MainActivity) getActivity()).startMainKillSurvey();
             }
         });
     }
