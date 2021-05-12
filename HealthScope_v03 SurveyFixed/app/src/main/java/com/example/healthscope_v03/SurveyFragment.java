@@ -72,11 +72,7 @@ public class SurveyFragment extends Fragment {
                 }
 
                 Toast.makeText(getActivity(), "Survey Completed.", Toast.LENGTH_SHORT).show();
-                for(int i=0;i<finalAnswers.length;i++)
-                {
-                    ((MainActivity) getActivity()).mainFragment.Send_data(String.valueOf(finalAnswers[i]));
-                }
-
+                ((MainActivity) getActivity()).mainFragment.Send_data(String.valueOf(finalAnswers));
                 ((MainActivity) getActivity()).startMainKillSurvey();
             }
         });

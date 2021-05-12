@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -17,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +25,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Set;
 import java.util.UUID;
 
@@ -37,22 +35,18 @@ public class MainFragment extends Fragment {
 
     enum SendAndReceiveDataStates{
         RECEIVE_TEMPERATURES,
-        RECEIVE_RISK,
-        SURVEY_REQUEST,
+        //RECEIVE_RISK,
+        //SURVEY_REQUEST,
         NONE
     }
 
     private static final String TAG = "MY_APP_DEBUG_TAG";
-    public static final int MESSAGE_READ = 0;
-    public static final int MESSAGE_WRITE = 1;
-    public static final int MESSAGE_TOAST = 2;
     public final static int REQUEST_ENABLE_BT = 1;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    private Handler my_main_handler = new Handler();
+    private final Handler my_main_handler = new Handler();
     BluetoothAdapter bta;                 //bluetooth stuff
     BluetoothSocket mmSocket;
-    Button retryConnection;
-    float temperatures[] = new float[432];
+    float[] temperatures = new float[432];
     int temperatureCount = 0;
 
     MutableLiveData<Boolean> risk;
@@ -60,11 +54,9 @@ public class MainFragment extends Fragment {
     //bluetooth stuff
     BluetoothDevice mmDevice;             //bluetooth stuff
     ConnectedThread my_bs;
-    EditText inputData;
-    TextView ReadView;
-    TextView WriteView;
     SendAndReceiveDataStates sendAndReceiveDataState = SendAndReceiveDataStates.NONE;
-    Button takeSurvey, sendDataBtn, startConnectionBtn, viewGraph;
+    Button takeSurvey;
+    Button viewGraph;
 
     @Nullable
     @Override
@@ -72,85 +64,42 @@ public class MainFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
+    @SuppressLint({"SetTextI18n", "NewApi"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        inputData = getView().findViewById(R.id.Write_Text);
-        takeSurvey = getView().findViewById(R.id.surveyBtn);
-        sendDataBtn = getView().findViewById(R.id.button2);
-        viewGraph = getView().findViewById(R.id.viewGraph);
-        startConnectionBtn = getView().findViewById(R.id.startConnection);
+        takeSurvey = requireView().findViewById(R.id.surveyBtn);
+        viewGraph = requireView().findViewById(R.id.viewGraph);
 
         Log.d(TAG, "onViewCreated: " + temperatureCount + temperatures.length);
 
-        final LayoutInflater factory = getLayoutInflater();
-        final View v = factory.inflate(R.layout.connecting_dialog, null);
-
         risk = new MutableLiveData<>();
 
-        risk.setValue(false); //Initilize with a value
+        risk.setValue(false); //Initialize with a value
 
-        TextView riskView = getView().findViewById(R.id.isSafe);
+        TextView riskView = requireView().findViewById(R.id.isSafe);
 
-        risk.observe(getActivity(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean isAtRisk) {
-                if (isAtRisk){
-                    riskView.setText("At Risk");
-                    riskView.getBackground().setTint(getActivity().getColor(R.color.red));
-                } else{
-                    riskView.setText("Safe");
-                    riskView.getBackground().setTint(getActivity().getColor(R.color.green));
-                }
+        risk.observe(requireActivity(), isAtRisk -> {
+            if (isAtRisk){
+                riskView.setText("You are at Risk");
+                riskView.getBackground().setTint(requireActivity().getColor(R.color.red));
+            } else{
+                riskView.setText("You are Safe");
+                riskView.getBackground().setTint(requireActivity().getColor(R.color.green));
             }
         });
 
-        //dialog.startLoadingAlertDialog();
-
-        retryConnection = v.findViewById(R.id.retryConnection);
-
-        viewGraph.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        viewGraph.setOnClickListener(v1 -> {
 //                sendAndReceiveDataState = SendAndReceiveDataStates.RECEIVE_TEMPERATURES;
 //                Send_data("AAAAA"); //Trigger code for arduino
-                ((MainActivity) getActivity()).startGraph();
+            ((MainActivity) requireActivity()).startGraph();
 
-            }
         });
 
-        retryConnection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refreshConnection();
-            }
-        });
+        Log.d(TAG, "value of: " + mmSocket);
 
-        startConnectionBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                start_connection();
-            }
-        });
+        takeSurvey.setOnClickListener(v12 -> ((MainActivity) requireActivity()).startSurvey());
 
-        sendDataBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Send_data(inputData.getText().toString());
-            }
-        });
-
-        Log.d(TAG, "value of: " + String.valueOf(mmSocket));
-
-        takeSurvey.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((MainActivity) getActivity()).startSurvey();
-            }
-        });
-
-        ReadView = getView().findViewById(R.id.Read_Text);
-        WriteView = getView().findViewById(R.id.Sent_Text);
         //This code check if the user device allows Bluetooth
         bta = BluetoothAdapter.getDefaultAdapter();
         if (bta == null) {
@@ -164,7 +113,7 @@ public class MainFragment extends Fragment {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
-        refreshConnection();    //Establishes connection.
+        InitializeBluetooth();    //Bluetooth settings.
     }
 
 
@@ -174,7 +123,7 @@ public class MainFragment extends Fragment {
     /////////////////////////////////////////////////////////////////////////////////////
 
 
-    public void refreshConnection() {
+    public void InitializeBluetooth() {
         //Device is activated (if it wasn't), and paired.
         Set<BluetoothDevice> pairedDevices;
         try{
@@ -215,7 +164,7 @@ public class MainFragment extends Fragment {
         }
     }
 
-    public void start_connection() {
+    public void StartConnection() {
         // Check whether BT is on. Send request to enable it If it is off.
         if (!bta.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -229,33 +178,12 @@ public class MainFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), "Bluetooth connection is already completed!", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void connect_and_send(String send) {
-        // Check whether BT is on. Send request to enable it If it is off.
-        Log.d(TAG, "connect_and_send: Starting connection after survey");
-        if (!bta.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            return;
-        }
-        if (my_bs == null) {
-            ConnectThread my_c_thread = new ConnectThread();
-            new Thread(my_c_thread).start();
-            Toast.makeText(getActivity(), "Connected.", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getActivity(), "Bluetooth connection is already completed!", Toast.LENGTH_SHORT).show();
-        }
-        Send_data(send);
     }
 
     public void Send_data(String data) {
         if (my_bs == null) {
             Toast.makeText(getActivity(), "Bluetooth connection is not made", Toast.LENGTH_SHORT).show();
             return;
-        }
-        if(data.equals("T")){
-            sendAndReceiveDataState = SendAndReceiveDataStates.RECEIVE_TEMPERATURES;
         }
         my_bs.write(data.getBytes());
     }
@@ -300,14 +228,6 @@ public class MainFragment extends Fragment {
 
         }
 
-        // Closes the client socket and causes the thread to finish.
-        public void cancel() {
-            try {
-                mmSocket.close();
-            } catch (IOException e) {
-                Log.e(TAG, "Could not close the client socket", e);
-            }
-        }
     }
 
     class ConnectedThread extends Thread {
@@ -345,18 +265,17 @@ public class MainFragment extends Fragment {
             while (true) {
                 try {
                     numBytes = mmInStream.read(mmBuffer);
+                    //noinspection Convert2Lambda
                     my_main_handler.post(new Runnable() {
                         @Override
                         public void run() {
                             str = new String(mmBuffer, StandardCharsets.UTF_8);
-                            ReadView.setText(str);
                             switch (sendAndReceiveDataState) {
                                 case RECEIVE_TEMPERATURES:
                                     temperatures[temperatureCount] = Integer.parseInt(str) / 10;
                                     temperatureCount++;
                                     if (temperatureCount == temperatures.length) {
                                         temperatureCount = 0;
-                                        ReadView.setText("Temperature array: " + Arrays.toString(temperatures));
                                         sendAndReceiveDataState = SendAndReceiveDataStates.NONE;
                                     }
                                     break;
@@ -371,6 +290,7 @@ public class MainFragment extends Fragment {
         }
 
         // Call this from the main activity to send data to the remote device.
+        @SuppressWarnings("Convert2Lambda")
         public void write(byte[] bytes) {
             try {
                 mmOutStream.write(bytes);
@@ -378,7 +298,6 @@ public class MainFragment extends Fragment {
                     @Override
                     public void run() {
                         str = new String(bytes, StandardCharsets.UTF_8);
-                        WriteView.setText(str);
                     }
                 });
             } catch (IOException e) {

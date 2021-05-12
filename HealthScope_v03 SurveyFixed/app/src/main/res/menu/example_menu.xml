@@ -8,8 +8,6 @@
         <menu>
             <item android:id="@+id/sub_item1"
                 android:title="Settings"/>
-           <item    android:id="@+id/sub_item2"
-               android:title="Sub_Item2"/>
         </menu>
     </item>
 </menu>

@@ -72,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 settingsFragment = new SettingsFragment();
                 getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), settingsFragment).hide(mainFragment).commit();
                 break;
-            case R.id.sub_item2:
-                Toast.makeText(this, "Item2 is Selected", Toast.LENGTH_SHORT).show();
-                break;
         }
         return super.onOptionsItemSelected(item);
     }
