@@ -42,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startMainKillSurvey(){
-        getSupportFragmentManager().beginTransaction().hide(surveyFragment).show(mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().remove(surveyFragment).show(mainFragment).commit();
     }
 
     public void startMainKillSettings(){
-        getSupportFragmentManager().beginTransaction().hide(settingsFragment).show(mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().remove(settingsFragment).show(mainFragment).commit();
     }
 
     public void startGraph(){
