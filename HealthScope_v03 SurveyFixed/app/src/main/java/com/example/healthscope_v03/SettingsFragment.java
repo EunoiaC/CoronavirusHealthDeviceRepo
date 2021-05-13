@@ -42,7 +42,9 @@ public class SettingsFragment extends Fragment {
         Spinner s = getView().findViewById(R.id.ageSpinner);
         Button submit = getView().findViewById(R.id.submitSettings);
 
-        MultipleChoiceQuestion gender, hasDisease, isSmoker;
+        YesOrNoQuestion hasDisease, isSmoker;
+
+        MultipleChoiceQuestion gender;
 
         hasDisease = getView().findViewById(R.id.hasDisease);
         isSmoker = getView().findViewById(R.id.isSmoker);

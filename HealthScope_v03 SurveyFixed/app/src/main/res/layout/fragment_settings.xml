@@ -31,12 +31,10 @@
         app:question_title="What is your gender?"
         tools:layout_editor_absoluteX="10dp" />
 
-    <com.aadyad.checkboxquestion.Views.MultipleChoiceQuestion
+    <com.aadyad.checkboxquestion.Views.YesOrNoQuestion
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:number_enabled="true"
-        app:option_1="Yes"
-        app:option_2="No"
         android:id="@+id/isSmoker"
         app:checkbox_location="left"
         app:question_number="2"
@@ -56,11 +54,9 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <com.aadyad.checkboxquestion.Views.MultipleChoiceQuestion
+    <com.aadyad.checkboxquestion.Views.YesOrNoQuestion
         android:layout_width="wrap_content"
         app:number_enabled="true"
-        app:option_1="Yes"
-        app:option_2="No"
         app:question_number="4"
         android:layout_marginTop="10dp"
         android:id="@+id/hasDisease"
