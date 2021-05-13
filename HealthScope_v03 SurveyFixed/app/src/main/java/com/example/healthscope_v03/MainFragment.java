@@ -1,11 +1,5 @@
 package com.example.healthscope_v03;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.MutableLiveData;
-
-import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -20,6 +14,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,20 +32,13 @@ import java.util.UUID;
 
 public class MainFragment extends Fragment {
 
-    enum SendAndReceiveDataStates{
-        RECEIVE_TEMPERATURES,
-        //RECEIVE_RISK,
-        //SURVEY_REQUEST,
-        NONE
-    }
-
     private static final String TAG = "MY_APP_DEBUG_TAG";
     public final static int REQUEST_ENABLE_BT = 1;
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private final Handler my_main_handler = new Handler();
     BluetoothAdapter bta;                 //bluetooth stuff
     BluetoothSocket mmSocket;
-    float[] temperatures = new float[432];
+    double[] temperatures = new double[72];
     int temperatureCount = 0;
 
     MutableLiveData<Boolean> risk;
@@ -54,7 +46,7 @@ public class MainFragment extends Fragment {
     //bluetooth stuff
     BluetoothDevice mmDevice;             //bluetooth stuff
     ConnectedThread my_bs;
-    SendAndReceiveDataStates sendAndReceiveDataState = SendAndReceiveDataStates.NONE;
+
     Button takeSurvey;
     Button viewGraph;
 
@@ -64,7 +56,6 @@ public class MainFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
-    @SuppressLint({"SetTextI18n", "NewApi"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -119,11 +110,9 @@ public class MainFragment extends Fragment {
             public void run() {
                 StartConnection();
             }
-        }, 1000);
+        }, 2500);
     }
 
-
-    //hello
     /////////////////////////////////////////////////////////////////////////////////////
     //                              OnCreate ENDS HERE                                 //
     /////////////////////////////////////////////////////////////////////////////////////
@@ -159,14 +148,9 @@ public class MainFragment extends Fragment {
 
             if (!devices.contains("HC-06")) {
                 Toast.makeText(getActivity(), "Not connected to HC-06", Toast.LENGTH_SHORT).show();
-                //synchronizeData.setEnabled(false);
             }
-          /*  final ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,devices);
-            pairedList.setAdapter(adapter);
-        }*/
         } else {
             Toast.makeText(getActivity(), "No devices were found.", Toast.LENGTH_SHORT).show();
-            //synchronizeData.setEnabled(false);
         }
     }
 
@@ -264,31 +248,51 @@ public class MainFragment extends Fragment {
         }
 
         @Override
-        public void run() {
+        public void run() { // Changed part !!!!!!!!!!!!!!!!!!!!!!
             mmBuffer = new byte[1024];
             int numBytes; // bytes returned from read()
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
                 try {
                     numBytes = mmInStream.read(mmBuffer);
-                    //noinspection Convert2Lambda
-                    my_main_handler.post(new Runnable() {
+
+                    my_main_handler.post(new Runnable() { // For debug purposes can delete later
                         @Override
                         public void run() {
                             str = new String(mmBuffer, StandardCharsets.UTF_8);
-                            switch (sendAndReceiveDataState) {
-                                case RECEIVE_TEMPERATURES:
-                                    temperatures[temperatureCount] = Integer.parseInt(str) / 10;
-                                    temperatureCount++;
-                                    if (temperatureCount == temperatures.length) {
-                                        temperatureCount = 0;
-                                        sendAndReceiveDataState = SendAndReceiveDataStates.NONE;
-                                    }
-                                    break;
-                            }
-
                         }
                     });
+
+                    if(mmBuffer[0]=='T' & numBytes==72) { // TEMP DATA COMING
+                        my_main_handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int i = 0; i < 20; i++) {
+                                    temperatures[i] = (mmBuffer[i + 1] & 0xff)*0.0588 + 25; // INCOMPLETE NEEDS MAPPING
+                                }
+                                // ((MainActivity) requireActivity()).startGraph();
+                            }
+                        });
+                    }
+                    else if(mmBuffer[0]=='R') { // RISK came
+                        if (mmBuffer[1] == '1') { // If risk is 1 show it to the user, o.w. do nothing
+                            my_main_handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    risk.setValue(true);
+                                }
+                            });
+                        }
+                    }
+                    else if(mmBuffer[0]=='S') { // survey request
+
+                        my_main_handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ((MainActivity) requireActivity()).startSurvey();  // Go to the survey interface
+                            }
+                        });
+                    }
                 } catch (IOException e) {
                     Log.d(TAG, "Read handler failed");
                 }

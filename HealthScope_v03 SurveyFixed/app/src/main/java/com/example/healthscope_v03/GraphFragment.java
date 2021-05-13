@@ -1,39 +1,32 @@
 package com.example.healthscope_v03;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.OnDataPointTapListener;
-import com.jjoe64.graphview.series.Series;
 
-import java.text.Format;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class GraphFragment extends Fragment {
 
-    float[] temps;
-    Date[] dates;
+    double[] temps;
     Date tempDate;
     GraphView graphView;
 
@@ -53,7 +46,7 @@ public class GraphFragment extends Fragment {
     }
 
     void generateRandomTemps() {
-        temps = new float[432];
+        temps = new double[72];
 
         for (int i = 0; i < temps.length; i++) {
             double randomNum = 35 + new Random().nextDouble() * (40 - 35);
@@ -61,12 +54,12 @@ public class GraphFragment extends Fragment {
             Log.d("TAG", "generateRandomTemps: " + temps[i] + " " + randomNum);
         }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
 
         tempDate = new Date(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(72));
         Log.d("TAG", "startDate: " + tempDate);
 
-        graphView = getView().findViewById(R.id.tempGraph);
+        graphView = requireView().findViewById(R.id.tempGraph);
         DataPoint[] values = new DataPoint[temps.length];
         ArrayList<Date> dates = new ArrayList<>();
         for (int i = 0; i < temps.length; i++) {
@@ -79,12 +72,7 @@ public class GraphFragment extends Fragment {
         graphView.setTitle("Body Temperature for Last 3 Days");
         graphView.setTitleTextSize(50);
         graphView.setTitleColor(Color.RED);
-        series.setOnDataPointTapListener(new OnDataPointTapListener() {
-            @Override
-            public void onTap(Series series, DataPointInterface dataPoint) {
-                Toast.makeText(getActivity(), "Clicked on: temp = " + dataPoint.getY() + " time = " + simpleDateFormat.format(dates.get((int) dataPoint.getX())), Toast.LENGTH_LONG).show();
-            }
-        });
+        series.setOnDataPointTapListener((series1, dataPoint) -> Toast.makeText(getActivity(), "Clicked on: temp = " + dataPoint.getY() + " time = " + simpleDateFormat.format(dates.get((int) dataPoint.getX())), Toast.LENGTH_LONG).show());
         graphView.getViewport().setYAxisBoundsManual(true);
         graphView.getViewport().setMaxY(50);
         graphView.getViewport().setMinY(25);
@@ -98,7 +86,7 @@ public class GraphFragment extends Fragment {
                     return simpleDateFormat.format(dates.get((int) value));
                 } else {
                     // return y label as number
-                    return super.formatLabel(value, isValueInXAxis) + "°C"; // let the y-value be normal-formatted
+                    return super.formatLabel(value, false) + "°C"; // let the y-value be normal-formatted
                 }
             }
         });
