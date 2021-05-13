@@ -114,6 +114,12 @@ public class MainFragment extends Fragment {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
         InitializeBluetooth();    //Bluetooth settings.
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                StartConnection();
+            }
+        }, 1000);
     }
 
 
