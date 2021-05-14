@@ -1,38 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center|top"
-    android:orientation="vertical"
     tools:context=".SurveyFragment"
     android:padding="10dp">
 
-    <com.example.healthscope_v03.CustomViews.CheckboxQuestion
-        android:id="@+id/question1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:questionNumber="1"
-        app:questionTitle="Do you have loss of smell or taste?" />
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.example.healthscope_v03.CustomViews.CheckboxQuestion
-        android:id="@+id/question2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:questionNumber="2"
-        app:questionTitle="Do you have joint pain?" />
+        <com.aadyad.checkboxquestion.Views.YesOrNoQuestion
+            android:id="@+id/question1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:spacing_between_boxes="120"
+            app:question_number="1"
+            app:question_title="Do you have loss of smell or taste?" />
 
-    <com.example.healthscope_v03.CustomViews.CheckboxQuestion
-        android:id="@+id/question3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:questionNumber="3"
-        app:questionTitle="Do you feel tired?" />
+        <com.aadyad.checkboxquestion.Views.YesOrNoQuestion
+            android:id="@+id/question2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:question_number="2"
+            app:spacing_between_boxes="120"
+            app:question_title="Do you have joint pain?" />
+
+        <com.aadyad.checkboxquestion.Views.YesOrNoQuestion
+            android:id="@+id/question3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:question_number="3"
+            app:spacing_between_boxes="120"
+            app:question_title="Do you feel tired?" />
+    </LinearLayout>
+
+
     <Button
+        android:id="@+id/submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:background="@drawable/round_bg"
+        android:textSize="20sp"
         android:text="Submit"
-        android:id="@+id/submit"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

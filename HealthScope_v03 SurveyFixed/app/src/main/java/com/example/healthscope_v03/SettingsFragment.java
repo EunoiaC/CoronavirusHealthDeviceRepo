@@ -1,17 +1,23 @@
 package com.example.healthscope_v03;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
@@ -49,6 +55,21 @@ public class SettingsFragment extends Fragment {
         hasDisease = getView().findViewById(R.id.hasDisease);
         isSmoker = getView().findViewById(R.id.isSmoker);
         gender = getView().findViewById(R.id.gender);
+
+        Bitmap b = BitmapFactory.decodeResource(getActivity().getResources(),
+                R.drawable.blue);
+
+        int num = 175;
+
+        b = Bitmap.createScaledBitmap(b, (int) (num - (num * 0.1)), num, false);
+
+        appendImage(gender.getCheckbox(0), b);
+
+        b = BitmapFactory.decodeResource(getActivity().getResources(),
+                R.drawable.pink);
+        b = Bitmap.createScaledBitmap(b, (int) (num - (num * 0.1)), num, false);
+
+        appendImage(gender.getCheckbox(1), b);
 
         Integer[] choices = new Integer[100];
         for (int i = 0; i < 100; i++){
@@ -94,5 +115,13 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+    }
+
+    private void appendImage(CheckBox checkBox, Bitmap bmp)
+    {
+        checkBox.setTransformationMethod(null);
+        SpannableString ss = new SpannableString("  ");
+        ss.setSpan(new ImageSpan(bmp, ImageSpan.ALIGN_BASELINE), 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        checkBox.append(ss);
     }
 }
