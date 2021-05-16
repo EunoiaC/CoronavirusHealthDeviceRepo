@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainer;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
@@ -46,6 +47,7 @@ public class GraphFragment extends Fragment {
     }
 
     void generateRandomTemps() {
+        /*
         temps = new double[72];
 
         for (int i = 0; i < temps.length; i++) {
@@ -53,6 +55,9 @@ public class GraphFragment extends Fragment {
             temps[i] = (float) randomNum;
             Log.d("TAG", "generateRandomTemps: " + temps[i] + " " + randomNum);
         }
+            We don't need to generate random temps anymore. We need to
+         */
+        temps = ((MainActivity) requireActivity()).mainFragment.ReturnTemperatures();
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
 

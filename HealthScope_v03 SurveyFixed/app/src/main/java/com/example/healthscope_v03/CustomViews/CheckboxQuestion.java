@@ -1,10 +1,10 @@
 package com.example.healthscope_v03.CustomViews;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,6 +39,7 @@ public class CheckboxQuestion extends LinearLayout {
     }
 
     // Setup views
+    @SuppressLint("SetTextI18n")
     private void init(String title, String number, boolean numEnabled) {
         TextView questionTitle = (TextView) findViewById(R.id.question_title);
         TextView questionNumber = (TextView) findViewById(R.id.question_number);
@@ -58,25 +59,19 @@ public class CheckboxQuestion extends LinearLayout {
         CheckBox yes = (CheckBox) findViewById(R.id.yes);
         CheckBox no = (CheckBox) findViewById(R.id.no);
 
-        yes.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                no.setChecked(false);
-                yes.setChecked(true);
-                buttonClicked = 2;
-            }
+        yes.setOnClickListener(v -> {
+            no.setChecked(false);
+            yes.setChecked(true);
+            buttonClicked = 2;
         });
 
-        no.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                no.setChecked(true);
-                yes.setChecked(false);
-                buttonClicked = 1;
-            }
+        no.setOnClickListener(v -> {
+            no.setChecked(true);
+            yes.setChecked(false);
+            buttonClicked = 1;
         });
     }
-
+/*
     public int getAnswer(){
         return buttonClicked;
     }
@@ -90,4 +85,6 @@ public class CheckboxQuestion extends LinearLayout {
         TextView questionTitle = (TextView) findViewById(R.id.question_title);
         questionTitle.setText(number + ". ");
     }
+
+ */
 }

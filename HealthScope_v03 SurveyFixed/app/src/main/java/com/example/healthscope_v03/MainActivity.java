@@ -1,17 +1,15 @@
 package com.example.healthscope_v03;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentContainerView;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentContainerView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
     GraphFragment graphFragment;
     FragmentContainerView fragmentContainerView;
     LinearLayout linearLayout;
-    Button viewGraph;
     SettingsFragment settingsFragment;
 
     @Override
@@ -50,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startGraph(){
-        getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), graphFragment).hide(mainFragment).commit();
+        graphFragment = new GraphFragment();
+        getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), graphFragment).hide(mainFragment).show(graphFragment).commit();
     }
 
     public void startSurvey() {
@@ -67,11 +65,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.sub_item1:
-                settingsFragment = new SettingsFragment();
-                getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), settingsFragment).hide(mainFragment).commit();
-                break;
+        if (item.getItemId() == R.id.sub_item1) {
+            settingsFragment = new SettingsFragment();
+            getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), settingsFragment).hide(mainFragment).commit();
         }
         return super.onOptionsItemSelected(item);
     }

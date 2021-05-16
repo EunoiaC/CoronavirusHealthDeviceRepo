@@ -3,11 +3,6 @@ package com.example.healthscope_v03;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
@@ -19,8 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.aadyad.checkboxquestion.Question;
 import com.aadyad.checkboxquestion.Views.MultipleChoiceQuestion;
@@ -45,18 +43,18 @@ public class SettingsFragment extends Fragment {
 
         data[0] = 'U';
 
-        Spinner s = getView().findViewById(R.id.ageSpinner);
-        Button submit = getView().findViewById(R.id.submitSettings);
+        Spinner s = requireView().findViewById(R.id.ageSpinner);
+        Button submit = requireView().findViewById(R.id.submitSettings);
 
         YesOrNoQuestion hasDisease, isSmoker;
 
         MultipleChoiceQuestion gender;
 
-        hasDisease = getView().findViewById(R.id.hasDisease);
-        isSmoker = getView().findViewById(R.id.isSmoker);
-        gender = getView().findViewById(R.id.gender);
+        hasDisease = requireView().findViewById(R.id.hasDisease);
+        isSmoker = requireView().findViewById(R.id.isSmoker);
+        gender = requireView().findViewById(R.id.gender);
 
-        Bitmap b = BitmapFactory.decodeResource(getActivity().getResources(),
+        Bitmap b = BitmapFactory.decodeResource(requireActivity().getResources(),
                 R.drawable.blue);
 
         int num = 175;
@@ -65,7 +63,7 @@ public class SettingsFragment extends Fragment {
 
         appendImage(gender.getCheckbox(0), b);
 
-        b = BitmapFactory.decodeResource(getActivity().getResources(),
+        b = BitmapFactory.decodeResource(requireActivity().getResources(),
                 R.drawable.pink);
         b = Bitmap.createScaledBitmap(b, (int) (num - (num * 0.1)), num, false);
 
@@ -75,44 +73,38 @@ public class SettingsFragment extends Fragment {
         for (int i = 0; i < 100; i++){
             choices[i] = i;
         }
-        ArrayAdapter<Integer> a = new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_spinner_item, choices);
+        ArrayAdapter<Integer> a = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, choices);
         a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(a);
 
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (gender.getSelectedAnswer() == Question.NO_ANSWER || hasDisease.getSelectedAnswer() == Question.NO_ANSWER || isSmoker.getSelectedAnswer() == Question.NO_ANSWER ){
-                    Toast.makeText(getActivity(), "Please answer all questions.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                data[1] = gender.getSelectedAnswer() == 1 ? '1': '0';
-                data[2] = isSmoker.getSelectedAnswer() == 1 ? '1': '0';
-                if((Integer) s.getSelectedItem()<10) {
-                    data[3] = '0';
-                    data[4] = Character.forDigit((Integer) s.getSelectedItem(), 10);
-
-                }
-                else {
-                    char[] temp;
-                    temp = String.valueOf((Integer) s.getSelectedItem()).toCharArray();
-                    data[3] = temp[0];
-                    data[4] = temp[1];
-                }
-
-                data[5] = hasDisease.getSelectedAnswer() == 1 ? '1' : '0';
-
-
-                Log.d("TAG", "onClick: " + Arrays.toString(data));
-                Toast.makeText(getActivity(), "User Initialization is Completed.", Toast.LENGTH_SHORT).show();
-                for(int i=0;i<data.length;i++)
-                {
-                    ((MainActivity) getActivity()).mainFragment.Send_data(String.valueOf(data[i]));
-                }
-
-                ((MainActivity) getActivity()).startMainKillSettings();
+        submit.setOnClickListener(v -> {
+            if (gender.getSelectedAnswer() == Question.NO_ANSWER || hasDisease.getSelectedAnswer() == Question.NO_ANSWER || isSmoker.getSelectedAnswer() == Question.NO_ANSWER ){
+                Toast.makeText(getActivity(), "Please answer all questions.", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            data[1] = gender.getSelectedAnswer() == 1 ? '1': '0';
+            data[2] = isSmoker.getSelectedAnswer() == 1 ? '1': '0';
+            if((Integer) s.getSelectedItem()<10) {
+                data[3] = '0';
+                data[4] = Character.forDigit((Integer) s.getSelectedItem(), 10);
+
+            }
+            else {
+                char[] temp;
+                temp = String.valueOf((Integer) s.getSelectedItem()).toCharArray();
+                data[3] = temp[0];
+                data[4] = temp[1];
+            }
+
+            data[5] = hasDisease.getSelectedAnswer() == 1 ? '1' : '0';
+
+
+            Log.d("TAG", "onClick: " + Arrays.toString(data));
+            Toast.makeText(getActivity(), "User Initialization is Completed.", Toast.LENGTH_SHORT).show();
+            ((MainActivity) requireActivity()).mainFragment.Send_data(String.valueOf(data));
+
+            ((MainActivity) requireActivity()).startMainKillSettings();
         });
 
     }

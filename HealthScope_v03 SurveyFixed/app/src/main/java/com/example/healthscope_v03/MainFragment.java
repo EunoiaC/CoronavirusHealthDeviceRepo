@@ -1,5 +1,6 @@
 package com.example.healthscope_v03;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -56,6 +57,7 @@ public class MainFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
+    @SuppressLint({"SetTextI18n", "NewApi"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -69,7 +71,7 @@ public class MainFragment extends Fragment {
         risk.setValue(false); //Initialize with a value
 
         TextView riskView = requireView().findViewById(R.id.isSafe);
-
+    /*
         risk.observe(requireActivity(), isAtRisk -> {
             if (isAtRisk){
                 riskView.setText("You are at Risk");
@@ -80,11 +82,11 @@ public class MainFragment extends Fragment {
             }
         });
 
-        viewGraph.setOnClickListener(v1 -> {
-//                sendAndReceiveDataState = SendAndReceiveDataStates.RECEIVE_TEMPERATURES;
-//                Send_data("AAAAA"); //Trigger code for arduino
-            ((MainActivity) requireActivity()).startGraph();
+     */
 
+        viewGraph.setOnClickListener(v1 -> {
+            //((MainActivity) requireActivity()).startGraph();
+            Send_data("T");
         });
 
         Log.d(TAG, "value of: " + mmSocket);
@@ -105,18 +107,16 @@ public class MainFragment extends Fragment {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
         InitializeBluetooth();    //Bluetooth settings.
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                StartConnection();
-            }
-        }, 2500);
+        new Handler().postDelayed(this::StartConnection, 2500);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////
     //                              OnCreate ENDS HERE                                 //
     /////////////////////////////////////////////////////////////////////////////////////
 
+    public double[] ReturnTemperatures(){
+        return temperatures;
+    }
 
     public void InitializeBluetooth() {
         //Device is activated (if it wasn't), and paired.
@@ -256,41 +256,26 @@ public class MainFragment extends Fragment {
                 try {
                     numBytes = mmInStream.read(mmBuffer);
 
-                    my_main_handler.post(new Runnable() { // For debug purposes can delete later
-                        @Override
-                        public void run() {
-                            str = new String(mmBuffer, StandardCharsets.UTF_8);
-                        }
-                    });
+                    // For debug purposes can delete later
+                    my_main_handler.post(() -> str = new String(mmBuffer, StandardCharsets.UTF_8));
 
-                    if(mmBuffer[0]=='T' & numBytes==72) { // TEMP DATA COMING
-                        my_main_handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                for (int i = 0; i < 20; i++) {
-                                    temperatures[i] = (mmBuffer[i + 1] & 0xff)*0.0588 + 25; // INCOMPLETE NEEDS MAPPING
-                                }
-                                // ((MainActivity) requireActivity()).startGraph();
+                    if(mmBuffer[0]=='T' & numBytes>19) { // TEMP DATA COMING
+                        my_main_handler.post(() -> {
+                            for (int i = 0; i < 20; i++) {
+                                temperatures[i] = (mmBuffer[i + 1] & 0xff)*0.0588 + 25;
                             }
+                            ((MainActivity) requireActivity()).startGraph();
                         });
                     }
                     else if(mmBuffer[0]=='R') { // RISK came
                         if (mmBuffer[1] == '1') { // If risk is 1 show it to the user, o.w. do nothing
-                            my_main_handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    risk.setValue(true);
-                                }
-                            });
+                            my_main_handler.post(() -> risk.setValue(true));
                         }
                     }
                     else if(mmBuffer[0]=='S') { // survey request
 
-                        my_main_handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                ((MainActivity) requireActivity()).startSurvey();  // Go to the survey interface
-                            }
+                        my_main_handler.post(() -> {
+                            ((MainActivity) requireActivity()).startSurvey();  // Go to the survey interface
                         });
                     }
                 } catch (IOException e) {
@@ -299,17 +284,11 @@ public class MainFragment extends Fragment {
             }
         }
 
-        // Call this from the main activity to send data to the remote device.
-        @SuppressWarnings("Convert2Lambda")
+
         public void write(byte[] bytes) {
             try {
                 mmOutStream.write(bytes);
-                my_main_handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        str = new String(bytes, StandardCharsets.UTF_8);
-                    }
-                });
+                my_main_handler.post(() -> str = new String(bytes, StandardCharsets.UTF_8));
             } catch (IOException e) {
                 Log.d(TAG, "Write handler failed");
             }
