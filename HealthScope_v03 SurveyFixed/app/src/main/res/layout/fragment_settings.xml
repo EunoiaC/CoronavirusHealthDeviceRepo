@@ -83,6 +83,8 @@
         android:text="Submit"
         android:textSize="20sp"
         android:background="@drawable/round_bg"
+        android:backgroundTint="@color/purple_500"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

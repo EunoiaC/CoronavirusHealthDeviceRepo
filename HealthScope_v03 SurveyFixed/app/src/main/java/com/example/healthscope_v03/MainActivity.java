@@ -1,14 +1,17 @@
 package com.example.healthscope_v03;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentContainerView;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
         linearLayout = findViewById(R.id.fragmentLinearLayout);
         settingsFragment = new SettingsFragment();
         fragmentContainerView = new FragmentContainerView(this);
@@ -39,21 +45,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startMainKillSurvey(){
-        getSupportFragmentManager().beginTransaction().remove(surveyFragment).show(mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(surveyFragment).show(mainFragment).commit();
     }
 
     public void startMainKillSettings(){
-        getSupportFragmentManager().beginTransaction().remove(settingsFragment).show(mainFragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(settingsFragment).show(mainFragment).commit();
     }
 
     public void startGraph(){
+        showBackButton();
         graphFragment = new GraphFragment();
-        getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), graphFragment).hide(mainFragment).show(graphFragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), graphFragment).hide(mainFragment).show(graphFragment).commit();
     }
 
     public void startSurvey() {
+        showBackButton();
         surveyFragment = new SurveyFragment();
-        getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), surveyFragment).hide(mainFragment).show(surveyFragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), surveyFragment).hide(mainFragment).show(surveyFragment).commit();
     }
 
     @Override
@@ -67,8 +75,26 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.sub_item1) {
             settingsFragment = new SettingsFragment();
-            getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), settingsFragment).hide(mainFragment).commit();
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), settingsFragment).hide(mainFragment).commit();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showBackButton(){
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(surveyFragment).remove(graphFragment).show(mainFragment).commit();
+                hideBackButton();
+            }
+        });
+    }
+
+    public void hideBackButton(){
+        Toolbar toolbar = findViewById(R.id.my_toolbar);
+        toolbar.setNavigationIcon(null);
+        toolbar.setNavigationOnClickListener(null);
     }
 }
