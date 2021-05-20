@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.sub_item1) {
             settingsFragment = new SettingsFragment();
-            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), settingsFragment).hide(mainFragment).commit();
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), settingsFragment).hide(mainFragment).remove(surveyFragment).remove(graphFragment).commit();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(surveyFragment).remove(graphFragment).show(mainFragment).commit();
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(surveyFragment).remove(graphFragment).remove(settingsFragment).show(mainFragment).commit();
                 hideBackButton();
             }
         });
