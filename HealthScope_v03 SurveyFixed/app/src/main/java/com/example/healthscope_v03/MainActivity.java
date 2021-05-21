@@ -2,6 +2,7 @@ package com.example.healthscope_v03;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,13 +23,15 @@ public class MainActivity extends AppCompatActivity {
     FragmentContainerView fragmentContainerView;
     LinearLayout linearLayout;
     SettingsFragment settingsFragment;
+    Toolbar myToolbar;
+    boolean mainFragmentShowing = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         myToolbar.setTitle("HealthScope v1.0");
         myToolbar.setTitleTextColor(Color.GRAY);
@@ -48,33 +51,43 @@ public class MainActivity extends AppCompatActivity {
 
     public void startMainKillSurvey(){
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(surveyFragment).show(mainFragment).commit();
+        invalidateOptionsMenu();
     }
 
     public void startMainKillSettings(){
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(settingsFragment).show(mainFragment).commit();
+        invalidateOptionsMenu();
     }
     public void startMainKillGraph(){
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(graphFragment).show(mainFragment).commit();
-
+        invalidateOptionsMenu();
     }
 
     public void startGraph(){
         showBackButton();
         graphFragment = new GraphFragment();
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), graphFragment,"GraphFragment").addToBackStack("GraphFragment").hide(mainFragment).show(graphFragment).commit();
+        invalidateOptionsMenu();
     }
 
     public void startSurvey() {
         showBackButton();
         surveyFragment = new SurveyFragment();
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), surveyFragment,"SurveyFragment").addToBackStack("SurveyFragment").hide(mainFragment).show(surveyFragment).commit();
+        invalidateOptionsMenu();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (!mainFragmentShowing){
+            Log.d("isVisible", "onCreateOptionsMenu: isn't visible");
+            return false;
+        }
+        Log.d("isVisible", "onCreateOptionsMenu: is visible");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.example_menu, menu);
         return true;
+
     }
 
     @Override
@@ -83,12 +96,13 @@ public class MainActivity extends AppCompatActivity {
             showBackButton();
             settingsFragment = new SettingsFragment();
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).hide(mainFragment).add(fragmentContainerView.getId(), settingsFragment,"SettingsFragment").addToBackStack("SettingsFragment").commit();
-
+            invalidateOptionsMenu();
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void showBackButton(){
+        mainFragmentShowing = false;
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24);
         toolbar.setNavigationOnClickListener(v -> {
@@ -108,5 +122,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         toolbar.setNavigationIcon(null);
         toolbar.setNavigationOnClickListener(null);
+        mainFragmentShowing = true;
     }
 }
