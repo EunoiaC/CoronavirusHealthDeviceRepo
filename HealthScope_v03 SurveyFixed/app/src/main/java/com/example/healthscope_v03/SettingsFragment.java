@@ -82,6 +82,10 @@ public class SettingsFragment extends Fragment {
                 Toast.makeText(getActivity(), "Please answer all questions.", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (!((MainActivity) requireActivity()).mainFragment.connectionEstablished) {
+                Toast.makeText(getActivity(),"Please go back and establish connection first.",Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             data[1] = gender.getSelectedAnswer() == 1 ? '1': '0';
             data[2] = isSmoker.getSelectedAnswer() == 1 ? '1': '0';

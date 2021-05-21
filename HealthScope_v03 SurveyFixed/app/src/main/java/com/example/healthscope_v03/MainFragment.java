@@ -23,7 +23,6 @@ import androidx.lifecycle.MutableLiveData;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
@@ -38,9 +37,12 @@ public class MainFragment extends Fragment {
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     private final Handler my_main_handler = new Handler();
     BluetoothAdapter bta;                 //bluetooth stuff
-    BluetoothSocket mmSocket;
+    BluetoothSocket mmSocket=null;
     double[] temperatures = new double[72];
     int temperatureCount = 0;
+    public boolean connectionEstablished=false;
+    public boolean paired = false;
+
 
     MutableLiveData<Boolean> risk;
 
@@ -83,11 +85,7 @@ public class MainFragment extends Fragment {
         });
 
 
-
-        viewGraph.setOnClickListener(v1 -> {
-            //((MainActivity) requireActivity()).startGraph();
-            Send_data("T");
-        });
+        viewGraph.setOnClickListener(v1 -> Send_data("T"));
 
         Log.d(TAG, "value of: " + mmSocket);
 
@@ -108,15 +106,12 @@ public class MainFragment extends Fragment {
         }
         InitializeBluetooth();    //Bluetooth settings.
         new Handler().postDelayed(this::StartConnection, 2500);
+
     }
 
     /////////////////////////////////////////////////////////////////////////////////////
     //                              OnCreate ENDS HERE                                 //
     /////////////////////////////////////////////////////////////////////////////////////
-
-    public double[] ReturnTemperatures(){
-        return temperatures;
-    }
 
     public void InitializeBluetooth() {
         //Device is activated (if it wasn't), and paired.
@@ -142,15 +137,18 @@ public class MainFragment extends Fragment {
                     mmDevice = bta.getRemoteDevice(deviceHardwareAddress);
                     //Setting mUUID to the mac address of hc06
                     Toast.makeText(getActivity(), "Paired with " + mmDevice.getName(), Toast.LENGTH_SHORT).show();
+                    paired = true;
                     break;
                 }
             }
 
             if (!devices.contains("HC-06") && !devices.contains("HC-05")) {
                 Toast.makeText(getActivity(), "Not paired with Bluetooth module", Toast.LENGTH_SHORT).show();
+                paired = false;
             }
         } else {
             Toast.makeText(getActivity(), "No devices were found.", Toast.LENGTH_SHORT).show();
+                paired = false;
         }
     }
 
@@ -161,13 +159,23 @@ public class MainFragment extends Fragment {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
             return;
         }
-        if (my_bs == null) {
+
+        if (my_bs == null && paired) {
             ConnectThread my_c_thread = new ConnectThread();
             new Thread(my_c_thread).start();
-            Toast.makeText(getActivity(), "Connected.", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(getActivity(), "Bluetooth connection is already completed!", Toast.LENGTH_SHORT).show();
+            /*
+            if(Connection established condition){
+                connectionEstablished = true;
+                Toast.makeText(getActivity(), "Connected.", Toast.LENGTH_SHORT).show();
+            }
+            */
+            connectionEstablished = true;   //Remove this if above works.
+        } else if(my_bs == null && !paired){
+            Toast.makeText(getActivity(), "Please pair your phone with your necklace and run the app again.", Toast.LENGTH_SHORT).show();
+        } else if (connectionEstablished = true){
+            Toast.makeText(getActivity(), "Bluetooth connection is already made.", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     public void Send_data(String data) {

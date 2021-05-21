@@ -45,7 +45,7 @@ public class GraphFragment extends Fragment {
     }
 
     void createTemperatureGraph() {
-        temps = ((MainActivity) requireActivity()).mainFragment.ReturnTemperatures();
+        temps = ((MainActivity) requireActivity()).mainFragment.temperatures;
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
 
