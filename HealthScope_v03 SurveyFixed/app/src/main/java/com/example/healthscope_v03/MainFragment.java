@@ -161,18 +161,29 @@ public class MainFragment extends Fragment {
         }
 
         if (my_bs == null && paired) {
-            ConnectThread my_c_thread = new ConnectThread();
-            new Thread(my_c_thread).start();
-            /*
-            if(Connection established condition){
+            ConnectThread my_c_thread = null;
+            try {
+                my_c_thread = new ConnectThread();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (my_c_thread != null){
+                new Thread(my_c_thread).start();
                 connectionEstablished = true;
                 Toast.makeText(getActivity(), "Connected.", Toast.LENGTH_SHORT).show();
+            } else{
+                connectionEstablished = false;
             }
-            */
-            connectionEstablished = true;   //Remove this if above works.
+//            /*
+//            if(Connection established condition){
+//                connectionEstablished = true;
+//                Toast.makeText(getActivity(), "Connected.", Toast.LENGTH_SHORT).show();
+//            }
+//            */
+//            connectionEstablished = true;   //Remove this if above works.
         } else if(my_bs == null && !paired){
             Toast.makeText(getActivity(), "Please pair your phone with your necklace and run the app again.", Toast.LENGTH_SHORT).show();
-        } else if (connectionEstablished = true){
+        } else if (connectionEstablished){
             Toast.makeText(getActivity(), "Bluetooth connection is already made.", Toast.LENGTH_SHORT).show();
         }
 
@@ -188,16 +199,10 @@ public class MainFragment extends Fragment {
 
 
     class ConnectThread implements Runnable {
-        ConnectThread() {
+        ConnectThread() throws IOException{
 
             BluetoothSocket tmp = null;
-            try {
-                // Get a BluetoothSocket to connect with the given BluetoothDevice.
-                // MY_UUID is the app's UUID string, also used in the server code.
-                tmp = mmDevice.createRfcommSocketToServiceRecord(MY_UUID);
-            } catch (IOException e) {
-                Log.e(TAG, "Socket's create() method failed", e);
-            }
+            tmp = mmDevice.createRfcommSocketToServiceRecord(MY_UUID);
             mmSocket = tmp;
         }
 
