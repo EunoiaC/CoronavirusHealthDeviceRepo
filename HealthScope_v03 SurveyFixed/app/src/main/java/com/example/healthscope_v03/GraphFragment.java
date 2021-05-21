@@ -45,16 +45,6 @@ public class GraphFragment extends Fragment {
     }
 
     void createTemperatureGraph() {
-        /*
-        temps = new double[72];
-
-        for (int i = 0; i < temps.length; i++) {
-            double randomNum = 35 + new Random().nextDouble() * (40 - 35);
-            temps[i] = (float) randomNum;
-            Log.d("TAG", "generateRandomTemps: " + temps[i] + " " + randomNum);
-        }
-            We don't need to generate random temps anymore. We need to
-         */
         temps = ((MainActivity) requireActivity()).mainFragment.ReturnTemperatures();
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
@@ -68,7 +58,7 @@ public class GraphFragment extends Fragment {
         for (int i = 0; i < temps.length; i++) {
             values[i] = new DataPoint(i, temps[i]);
             dates.add(tempDate);
-            tempDate = new Date(tempDate.getTime() + TimeUnit.MINUTES.toMillis(10));
+            tempDate = new Date(tempDate.getTime() + TimeUnit.MINUTES.toMillis(30));
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(values);
         graphView.getViewport().setScrollable(true);

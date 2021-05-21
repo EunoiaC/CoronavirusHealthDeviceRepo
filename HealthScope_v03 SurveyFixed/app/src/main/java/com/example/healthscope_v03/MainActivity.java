@@ -1,17 +1,17 @@
 package com.example.healthscope_v03;
 
-import android.app.ActionBar;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentContainerView;
 
 public class MainActivity extends AppCompatActivity {
@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        myToolbar.setTitle("HealthScope v1.0");
+        myToolbar.setTitleTextColor(Color.GRAY);
 
         linearLayout = findViewById(R.id.fragmentLinearLayout);
         settingsFragment = new SettingsFragment();
@@ -51,17 +53,21 @@ public class MainActivity extends AppCompatActivity {
     public void startMainKillSettings(){
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(settingsFragment).show(mainFragment).commit();
     }
+    public void startMainKillGraph(){
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(graphFragment).show(mainFragment).commit();
+
+    }
 
     public void startGraph(){
         showBackButton();
         graphFragment = new GraphFragment();
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), graphFragment).hide(mainFragment).show(graphFragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), graphFragment,"GraphFragment").addToBackStack("GraphFragment").hide(mainFragment).show(graphFragment).commit();
     }
 
     public void startSurvey() {
         showBackButton();
         surveyFragment = new SurveyFragment();
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), surveyFragment).hide(mainFragment).show(surveyFragment).commit();
+        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), surveyFragment,"SurveyFragment").addToBackStack("SurveyFragment").hide(mainFragment).show(surveyFragment).commit();
     }
 
     @Override
@@ -74,8 +80,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.sub_item1) {
+            showBackButton();
             settingsFragment = new SettingsFragment();
-            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), settingsFragment).hide(mainFragment).remove(surveyFragment).remove(graphFragment).commit();
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).hide(mainFragment).add(fragmentContainerView.getId(), settingsFragment,"SettingsFragment").addToBackStack("SettingsFragment").commit();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -83,12 +91,16 @@ public class MainActivity extends AppCompatActivity {
     public void showBackButton(){
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(surveyFragment).remove(graphFragment).remove(settingsFragment).show(mainFragment).commit();
-                hideBackButton();
-            }
+        toolbar.setNavigationOnClickListener(v -> {
+            String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName();
+            Fragment f = getSupportFragmentManager().findFragmentByTag(tag);
+            if(f!=null && f.equals(surveyFragment))
+                startMainKillSurvey();
+            else if(f!=null && f.equals(graphFragment))
+                startMainKillGraph();
+            else if(f!=null && f.equals(settingsFragment))
+                startMainKillSettings();
+            hideBackButton();
         });
     }
 

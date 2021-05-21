@@ -71,18 +71,18 @@ public class MainFragment extends Fragment {
         risk.setValue(false); //Initialize with a value
 
         TextView riskView = requireView().findViewById(R.id.isSafe);
-    /*
+
         risk.observe(requireActivity(), isAtRisk -> {
             if (isAtRisk){
                 riskView.setText("You are at Risk");
-                riskView.getBackground().setTint(requireActivity().getColor(R.color.red));
+               // riskView.getBackground().setTint(requireActivity().getColor(R.color.red));
             } else{
                 riskView.setText("You are Safe");
-                riskView.getBackground().setTint(requireActivity().getColor(R.color.green));
+               //riskView.getBackground().setTint(requireActivity().getColor(R.color.green));
             }
         });
 
-     */
+
 
         viewGraph.setOnClickListener(v1 -> {
             //((MainActivity) requireActivity()).startGraph();
@@ -137,17 +137,17 @@ public class MainFragment extends Fragment {
                 Log.d(TAG, "onCreate: " + deviceName);
                 devices.add(deviceName);
                 devices.add(deviceHardwareAddress);
-                if (deviceName.equals("HC-06")) {
+                if (deviceName.equals("HC-06" )||deviceName.equals("HC-05")) {
                     //Connection specific to hc06 module
                     mmDevice = bta.getRemoteDevice(deviceHardwareAddress);
                     //Setting mUUID to the mac address of hc06
-                    Toast.makeText(getActivity(), "Connected to " + mmDevice.getName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Paired with " + mmDevice.getName(), Toast.LENGTH_SHORT).show();
                     break;
                 }
             }
 
-            if (!devices.contains("HC-06")) {
-                Toast.makeText(getActivity(), "Not connected to HC-06", Toast.LENGTH_SHORT).show();
+            if (!devices.contains("HC-06") && !devices.contains("HC-05")) {
+                Toast.makeText(getActivity(), "Not paired with Bluetooth module", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(getActivity(), "No devices were found.", Toast.LENGTH_SHORT).show();
@@ -249,19 +249,14 @@ public class MainFragment extends Fragment {
 
         @Override
         public void run() { // Changed part !!!!!!!!!!!!!!!!!!!!!!
-            mmBuffer = new byte[1024];
-            int numBytes; // bytes returned from read()
+            mmBuffer = new byte[73];
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
                 try {
-                    numBytes = mmInStream.read(mmBuffer);
-
-                    // For debug purposes can delete later
-                    my_main_handler.post(() -> str = new String(mmBuffer, StandardCharsets.UTF_8));
-
-                    if(mmBuffer[0]=='T' & numBytes>19) { // TEMP DATA COMING
+                    mmInStream.read(mmBuffer,0,73);
+                    if(mmBuffer[0]=='T') { // TEMP DATA COMING
                         my_main_handler.post(() -> {
-                            for (int i = 0; i < 20; i++) {
+                            for (int i = 0; i < 72; i++) {
                                 temperatures[i] = (mmBuffer[i + 1] & 0xff)*0.0588 + 25;
                             }
                             ((MainActivity) requireActivity()).startGraph();
@@ -273,7 +268,6 @@ public class MainFragment extends Fragment {
                         }
                     }
                     else if(mmBuffer[0]=='S') { // survey request
-
                         my_main_handler.post(() -> {
                             ((MainActivity) requireActivity()).startSurvey();  // Go to the survey interface
                         });
@@ -288,7 +282,6 @@ public class MainFragment extends Fragment {
         public void write(byte[] bytes) {
             try {
                 mmOutStream.write(bytes);
-                my_main_handler.post(() -> str = new String(bytes, StandardCharsets.UTF_8));
             } catch (IOException e) {
                 Log.d(TAG, "Write handler failed");
             }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HealthScope_v0.3</string>
+    <string name="app_name">HealthScope</string>
     <string name="Connect_button">Connect</string>
     <string name="Get_button">Get Data</string>
     <string name="Send_button">Send Data</string>
