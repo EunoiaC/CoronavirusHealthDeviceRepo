@@ -58,7 +58,7 @@ public class GraphFragment extends Fragment {
         for (int i = 0; i < temps.length; i++) {
             values[i] = new DataPoint(i, temps[i]);
             dates.add(tempDate);
-            tempDate = new Date(tempDate.getTime() + TimeUnit.MINUTES.toMillis(30));
+            tempDate = new Date(tempDate.getTime() + TimeUnit.MINUTES.toMillis(60));
         }
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(values);
         graphView.getViewport().setScrollable(true);
@@ -67,7 +67,7 @@ public class GraphFragment extends Fragment {
         graphView.setTitleColor(Color.RED);
         series.setOnDataPointTapListener((series1, dataPoint) -> Toast.makeText(getActivity(), "Clicked on: temp = " + dataPoint.getY() + " time = " + simpleDateFormat.format(dates.get((int) dataPoint.getX())), Toast.LENGTH_LONG).show());
         graphView.getViewport().setYAxisBoundsManual(true);
-        graphView.getViewport().setMaxY(50);
+        graphView.getViewport().setMaxY(40);
         graphView.getViewport().setMinY(25);
         graphView.getViewport().setMaxX(temps.length);
         graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {

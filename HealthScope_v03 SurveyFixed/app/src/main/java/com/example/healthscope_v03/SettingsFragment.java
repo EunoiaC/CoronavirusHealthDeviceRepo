@@ -96,7 +96,7 @@ public class SettingsFragment extends Fragment {
             }
             else {
                 char[] temp;
-                temp = String.valueOf((Integer) s.getSelectedItem()).toCharArray();
+                temp = String.valueOf(s.getSelectedItem()).toCharArray();
                 data[3] = temp[0];
                 data[4] = temp[1];
             }

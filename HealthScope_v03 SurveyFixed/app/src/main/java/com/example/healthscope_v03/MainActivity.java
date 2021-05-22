@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         myToolbar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
+        //setSupportActionBar(myToolbar);
         myToolbar.setTitle("HealthScope v1.0");
         myToolbar.setTitleTextColor(Color.GRAY);
 
@@ -51,15 +51,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void startMainKillSurvey(){
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(surveyFragment).show(mainFragment).commit();
+        hideBackButton();
         invalidateOptionsMenu();
     }
 
     public void startMainKillSettings(){
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(settingsFragment).show(mainFragment).commit();
+        hideBackButton();
         invalidateOptionsMenu();
     }
     public void startMainKillGraph(){
         getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right).remove(graphFragment).show(mainFragment).commit();
+        hideBackButton();
         invalidateOptionsMenu();
     }
 
