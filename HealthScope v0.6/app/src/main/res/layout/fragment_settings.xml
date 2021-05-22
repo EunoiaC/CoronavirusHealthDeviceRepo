@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    tools:context=".SettingsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Please answer the following questions."
+            android:textColor="@color/red"
+            android:textSize="20sp" />
+
+        <com.aadyad.checkboxquestion.Views.MultipleChoiceQuestion
+            android:id="@+id/gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:checkbox_location="left"
+            app:checkbox_orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:number_enabled="true"
+            app:option_1="Male "
+            app:option_2="Female "
+            app:question_number="1"
+            app:question_title="What is your gender?"
+            tools:layout_editor_absoluteX="10dp" />
+
+        <com.aadyad.checkboxquestion.Views.YesOrNoQuestion
+            android:id="@+id/isSmoker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:checkbox_location="left"
+            app:number_enabled="true"
+            app:question_number="2"
+            app:question_title="Are you a smoker?" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3. Please choose your age"
+                android:textSize="18dp" />
+
+            <Spinner
+                android:id="@+id/ageSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <com.aadyad.checkboxquestion.Views.YesOrNoQuestion
+            android:id="@+id/hasDisease"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:number_enabled="true"
+            app:question_number="4"
+            app:question_title="Do you have any chronic disease? (Eg: Asthma, COPD)" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/submitSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:text="Submit"
+        android:textSize="20sp"
+        android:background="@drawable/round_bg"
+        android:backgroundTint="@color/purple_500"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

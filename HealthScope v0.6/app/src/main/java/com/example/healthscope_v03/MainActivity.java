@@ -37,13 +37,14 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setTitleTextColor(Color.GRAY);
 
         linearLayout = findViewById(R.id.fragmentLinearLayout);
+        settingsFragment = new SettingsFragment();
         fragmentContainerView = new FragmentContainerView(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         fragmentContainerView.setId(View.generateViewId());
         linearLayout.addView(fragmentContainerView, lp);
 
         mainFragment = new MainFragment();
-
+        graphFragment = new GraphFragment();
 
         getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), mainFragment,"MainFragment").addToBackStack("MainFragment").commit();
     }
@@ -82,10 +83,11 @@ public class MainActivity extends AppCompatActivity {
         else if(f!=null && f==settingsFragment)
             getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(),surveyFragment,"SurveyFragment").addToBackStack("Survey Fragment").remove(settingsFragment).show(surveyFragment).commit();
         else if(f!=null && f ==surveyFragment){
-            return;
         }
-        getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), surveyFragment,"SurveyFragment").addToBackStack("SurveyFragment").hide(mainFragment).show(surveyFragment).commit();
-        invalidateOptionsMenu();
+        else {
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), surveyFragment, "SurveyFragment").addToBackStack("SurveyFragment").hide(mainFragment).show(surveyFragment).commit();
+            invalidateOptionsMenu();
+        }
     }
 
     @Override
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.example_menu, menu);
         return true;
+
     }
 
     @Override

@@ -38,7 +38,7 @@ public class MainFragment extends Fragment {
     private final Handler my_main_handler = new Handler();
     BluetoothAdapter bta;                 //bluetooth stuff
     BluetoothSocket mmSocket=null;
-    double[] temperatures = new double[72];
+    Double[] temperatures = new Double[72];
     int temperatureCount = 0;
     public boolean connectionEstablished=false;
     public boolean paired = false;
@@ -266,6 +266,7 @@ public class MainFragment extends Fragment {
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
                 try {
+
                     mmInStream.read(mmBuffer,0,73);
                     if(mmBuffer[0]=='T') { // TEMP DATA COMING
                         my_main_handler.post(() -> {
@@ -275,11 +276,11 @@ public class MainFragment extends Fragment {
                             ((MainActivity) requireActivity()).startGraph();
                         });
                     }
-                    else if(mmBuffer[0]=='R') { // RISK came
-                        if (mmBuffer[1] == '1') { // If risk is 1 show it to the user, o.w. do nothing
+                    else if(mmBuffer[0]=='a')  // RISK came
                             my_main_handler.post(() -> risk.setValue(true));
-                        }
-                    }
+                    else if(mmBuffer[0]=='b')
+                            my_main_handler.post(() -> risk.setValue(false));
+
                     else if(mmBuffer[0]=='S') { // survey request
                         my_main_handler.post(() -> {
                             ((MainActivity) requireActivity()).startSurvey();  // Go to the survey interface

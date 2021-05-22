@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">HealthScope</string>
+    <string name="Connect_button">Connect</string>
+    <string name="Get_button">Get Data</string>
+    <string name="Send_button">Send Data</string>
+    <string name="Send_Text_hint">Type the integer you want to send</string>
+    <string name="take_survey">Take Survey</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="_1_do_you_have_loss_of_smell_or_taste">1. Do you have loss of smell or taste?</string>
+    <string name="_2_do_you_have_joint_pain">2. Do you have joint pain?</string>
+    <string name="_1_do_you_feel_tired">1. Do you feel tired?</string>
+    <string name="submit_survey">Submit Survey</string>
+    <string name="submit_results">Submit Results</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="item_1">Item 1</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+</resources>
