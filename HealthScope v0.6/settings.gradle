@@ -1,2 +1,0 @@
-include ':app'
-rootProject.name = "HealthScope_v0.3"
