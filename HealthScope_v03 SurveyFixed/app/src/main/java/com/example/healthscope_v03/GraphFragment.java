@@ -20,12 +20,14 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class GraphFragment extends Fragment {
 
-    double[] temps;
+    Double[] temps;
     Date tempDate;
     GraphView graphView;
 
@@ -46,12 +48,11 @@ public class GraphFragment extends Fragment {
 
     void createTemperatureGraph() {
         temps = ((MainActivity) requireActivity()).mainFragment.temperatures;
+        Collections.reverse(Arrays.asList(temps));
 
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
-
         tempDate = new Date(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(72));
         Log.d("TAG", "startDate: " + tempDate);
-
         graphView = requireView().findViewById(R.id.tempGraph);
         DataPoint[] values = new DataPoint[temps.length];
         ArrayList<Date> dates = new ArrayList<>();

@@ -38,7 +38,9 @@ public class MainFragment extends Fragment {
     private final Handler my_main_handler = new Handler();
     BluetoothAdapter bta;                 //bluetooth stuff
     BluetoothSocket mmSocket=null;
-    double[] temperatures = new double[72];
+    Double[] temperatures = new Double[72];
+    Integer  CoughNumber=0;
+    Double RiskLevel = 0.0;
     int temperatureCount = 0;
     public boolean connectionEstablished=false;
     public boolean paired = false;
@@ -163,13 +165,7 @@ public class MainFragment extends Fragment {
         if (my_bs == null && paired) {
             ConnectThread my_c_thread = new ConnectThread();
             new Thread(my_c_thread).start();
-            /*
-            if(Connection established condition){
-                connectionEstablished = true;
-                Toast.makeText(getActivity(), "Connected.", Toast.LENGTH_SHORT).show();
-            }
-            */
-            connectionEstablished = true;   //Remove this if above works.
+            connectionEstablished = true;
         } else if(my_bs == null && !paired){
             Toast.makeText(getActivity(), "Please pair your phone with your necklace and run the app again.", Toast.LENGTH_SHORT).show();
         } else if (connectionEstablished = true){
@@ -257,7 +253,7 @@ public class MainFragment extends Fragment {
 
         @Override
         public void run() { // Changed part !!!!!!!!!!!!!!!!!!!!!!
-            mmBuffer = new byte[73];
+            mmBuffer = new byte[100];
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
                 try {
@@ -266,22 +262,25 @@ public class MainFragment extends Fragment {
                     e.printStackTrace();
                 }
                 try {
-                    mmInStream.read(mmBuffer,0,73);
+                    mmInStream.read(mmBuffer,0,74);
                     if(mmBuffer[0]=='T') { // TEMP DATA COMING
                         my_main_handler.postDelayed(() -> {
                             for (int i = 0; i < 72; i++) {
                                 temperatures[i] = (mmBuffer[i + 1] & 0xff)*0.0588 + 25;
                             }
+                            CoughNumber = mmBuffer[73] & 0xFF;
                             ((MainActivity) requireActivity()).startGraph();
-                        },1000);
+                        },500);
                     }
-                    else if(mmBuffer[0]=='a') { // RISK came
+                    else if(mmBuffer[0]=='R') { // RISK came
+                        my_main_handler.postDelayed(() ->{
+                            RiskLevel = (mmBuffer[1] & 0xFF) / 10.0;
+                        },500);
+
+                        //Progress bar will be updated.
+
+                        //Below part will be removed.
                         my_main_handler.post(() -> risk.setValue(true));
-
-                    }
-                    else if(mmBuffer[0]=='b') { // No-RISK came
-                        my_main_handler.post(() -> risk.setValue(false));
-
                     }
 
                     else if(mmBuffer[0]=='S') { // survey request

@@ -37,14 +37,11 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setTitleTextColor(Color.GRAY);
 
         linearLayout = findViewById(R.id.fragmentLinearLayout);
-        settingsFragment = new SettingsFragment();
         fragmentContainerView = new FragmentContainerView(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         fragmentContainerView.setId(View.generateViewId());
         linearLayout.addView(fragmentContainerView, lp);
-
         mainFragment = new MainFragment();
-        graphFragment = new GraphFragment();
 
         getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), mainFragment,"MainFragment").addToBackStack("MainFragment").commit();
     }
