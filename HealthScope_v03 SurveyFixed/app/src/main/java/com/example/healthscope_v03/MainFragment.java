@@ -38,7 +38,7 @@ public class MainFragment extends Fragment {
     private final Handler my_main_handler = new Handler();
     BluetoothAdapter bta;                 //bluetooth stuff
     BluetoothSocket mmSocket=null;
-    Double[] temperatures = new Double[72];
+    double[] temperatures = new double[72];
     int temperatureCount = 0;
     public boolean connectionEstablished=false;
     public boolean paired = false;
@@ -77,10 +77,10 @@ public class MainFragment extends Fragment {
         risk.observe(requireActivity(), isAtRisk -> {
             if (isAtRisk){
                 riskView.setText("You are at Risk");
-               // riskView.getBackground().setTint(requireActivity().getColor(R.color.red));
+                riskView.getBackground().setTint(requireActivity().getColor(R.color.red));
             } else{
                 riskView.setText("You are Safe");
-               //riskView.getBackground().setTint(requireActivity().getColor(R.color.green));
+                riskView.getBackground().setTint(requireActivity().getColor(R.color.green));
             }
         });
 
@@ -148,7 +148,7 @@ public class MainFragment extends Fragment {
             }
         } else {
             Toast.makeText(getActivity(), "No devices were found.", Toast.LENGTH_SHORT).show();
-                paired = false;
+            paired = false;
         }
     }
 
@@ -161,29 +161,18 @@ public class MainFragment extends Fragment {
         }
 
         if (my_bs == null && paired) {
-            ConnectThread my_c_thread = null;
-            try {
-                my_c_thread = new ConnectThread();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (my_c_thread != null){
-                new Thread(my_c_thread).start();
+            ConnectThread my_c_thread = new ConnectThread();
+            new Thread(my_c_thread).start();
+            /*
+            if(Connection established condition){
                 connectionEstablished = true;
                 Toast.makeText(getActivity(), "Connected.", Toast.LENGTH_SHORT).show();
-            } else{
-                connectionEstablished = false;
             }
-//            /*
-//            if(Connection established condition){
-//                connectionEstablished = true;
-//                Toast.makeText(getActivity(), "Connected.", Toast.LENGTH_SHORT).show();
-//            }
-//            */
-//            connectionEstablished = true;   //Remove this if above works.
+            */
+            connectionEstablished = true;   //Remove this if above works.
         } else if(my_bs == null && !paired){
             Toast.makeText(getActivity(), "Please pair your phone with your necklace and run the app again.", Toast.LENGTH_SHORT).show();
-        } else if (connectionEstablished){
+        } else if (connectionEstablished = true){
             Toast.makeText(getActivity(), "Bluetooth connection is already made.", Toast.LENGTH_SHORT).show();
         }
 
@@ -199,10 +188,16 @@ public class MainFragment extends Fragment {
 
 
     class ConnectThread implements Runnable {
-        ConnectThread() throws IOException{
+        ConnectThread() {
 
             BluetoothSocket tmp = null;
-            tmp = mmDevice.createRfcommSocketToServiceRecord(MY_UUID);
+            try {
+                // Get a BluetoothSocket to connect with the given BluetoothDevice.
+                // MY_UUID is the app's UUID string, also used in the server code.
+                tmp = mmDevice.createRfcommSocketToServiceRecord(MY_UUID);
+            } catch (IOException e) {
+                Log.e(TAG, "Socket's create() method failed", e);
+            }
             mmSocket = tmp;
         }
 
@@ -266,20 +261,28 @@ public class MainFragment extends Fragment {
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
                 try {
-
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
                     mmInStream.read(mmBuffer,0,73);
                     if(mmBuffer[0]=='T') { // TEMP DATA COMING
-                        my_main_handler.post(() -> {
+                        my_main_handler.postDelayed(() -> {
                             for (int i = 0; i < 72; i++) {
                                 temperatures[i] = (mmBuffer[i + 1] & 0xff)*0.0588 + 25;
                             }
                             ((MainActivity) requireActivity()).startGraph();
-                        });
+                        },1000);
                     }
-                    else if(mmBuffer[0]=='a')  // RISK came
-                            my_main_handler.post(() -> risk.setValue(true));
-                    else if(mmBuffer[0]=='b')
-                            my_main_handler.post(() -> risk.setValue(false));
+                    else if(mmBuffer[0]=='a') { // RISK came
+                        my_main_handler.post(() -> risk.setValue(true));
+
+                    }
+                    else if(mmBuffer[0]=='b') { // No-RISK came
+                        my_main_handler.post(() -> risk.setValue(false));
+
+                    }
 
                     else if(mmBuffer[0]=='S') { // survey request
                         my_main_handler.post(() -> {
@@ -287,7 +290,7 @@ public class MainFragment extends Fragment {
                         });
                     }
                 } catch (IOException e) {
-                    Log.d(TAG, "Read handler failed");
+                    // Log.d(TAG, "Read handler failed");
                 }
             }
         }
