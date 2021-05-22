@@ -32,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         myToolbar = findViewById(R.id.my_toolbar);
-        //setSupportActionBar(myToolbar);
+        setSupportActionBar(myToolbar);
         myToolbar.setTitle("HealthScope v1.0");
-        myToolbar.setTitleTextColor(Color.GRAY);
+        myToolbar.setTitleTextColor(Color.BLUE);
 
         linearLayout = findViewById(R.id.fragmentLinearLayout);
         fragmentContainerView = new FragmentContainerView(this);

@@ -79,10 +79,10 @@ public class MainFragment extends Fragment {
         risk.observe(requireActivity(), isAtRisk -> {
             if (isAtRisk){
                 riskView.setText("You are at Risk");
-                riskView.getBackground().setTint(requireActivity().getColor(R.color.red));
+             //   riskView.getBackground().setTint(requireActivity().getColor(R.color.red));
             } else{
                 riskView.setText("You are Safe");
-                riskView.getBackground().setTint(requireActivity().getColor(R.color.green));
+            //    riskView.getBackground().setTint(requireActivity().getColor(R.color.green));
             }
         });
 
