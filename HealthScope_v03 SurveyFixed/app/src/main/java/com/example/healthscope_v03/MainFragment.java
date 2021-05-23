@@ -76,23 +76,23 @@ public class MainFragment extends Fragment {
         risk.observe(requireActivity(), riskSituation->{
             if(risk.getValue()==5){
                 riskView.setText("You are at Extreme Risk");
-                riskView.getBackground().setTint(requireActivity().getColor(R.color.red));
+                //riskView.getBackground().setTint(requireActivity().getColor(R.color.ExtremeRisk));
             }
             else if(risk.getValue()==4){
                 riskView.setText("You are at High Risk");
-                riskView.getBackground().setTint(requireActivity().getColor(R.color.white));
+                //riskView.getBackground().setTint(requireActivity().getColor(R.color.HighRisk));
             }
             else if(risk.getValue()==3){
                 riskView.setText("You are at Medium Risk");
-                riskView.getBackground().setTint(requireActivity().getColor(R.color.purple_200));
+                //riskView.getBackground().setTint(requireActivity().getColor(R.color.MediumRisk));
             }
             else if(risk.getValue()==2){
                 riskView.setText("You are at Low Risk");
-                riskView.getBackground().setTint(requireActivity().getColor(R.color.purple_700));
+                //riskView.getBackground().setTint(requireActivity().getColor(R.color.LowRisk));
             }
             else if(risk.getValue()==1){
                 riskView.setText("You are safe");
-                riskView.getBackground().setTint(requireActivity().getColor(R.color.green));
+               // riskView.getBackground().setTint(requireActivity().getColor(R.color.NoRisk));
             }
 
         });
@@ -311,6 +311,7 @@ public class MainFragment extends Fragment {
 
                     else if(mmBuffer[0]=='S') { // survey request
                         my_main_handler.post(() -> {
+                            if(!(((MainActivity) requireActivity()).surveyFragment.isVisible()))
                             ((MainActivity) requireActivity()).startSurvey();  // Go to the survey interface
                         });
                     }

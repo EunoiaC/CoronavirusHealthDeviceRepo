@@ -82,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(),surveyFragment,"SurveyFragment").addToBackStack("Survey Fragment").remove(graphFragment).show(surveyFragment).commit();
         else if(f!=null && f==settingsFragment)
             getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(),surveyFragment,"SurveyFragment").addToBackStack("Survey Fragment").remove(settingsFragment).show(surveyFragment).commit();
-        else if(f!=null && f ==surveyFragment){
-        }
         else {
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), surveyFragment, "SurveyFragment").addToBackStack("SurveyFragment").hide(mainFragment).show(surveyFragment).commit();
             invalidateOptionsMenu();

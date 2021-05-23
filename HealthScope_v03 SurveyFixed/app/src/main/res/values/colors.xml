@@ -9,4 +9,9 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#ce4445</color>
     <color name="green">#295</color>
+    <color name="NoRisk">#00FB00</color>
+    <color name="LowRisk">#FFFF00</color>
+    <color name="MediumRisk">#FF9800</color>
+    <color name="HighRisk">#E82F2F</color>
+    <color name="ExtremeRisk">#710707</color>
 </resources>
