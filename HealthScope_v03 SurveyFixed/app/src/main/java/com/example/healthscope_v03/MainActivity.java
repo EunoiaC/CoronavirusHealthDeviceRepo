@@ -32,16 +32,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         myToolbar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
+        //setSupportActionBar(myToolbar);
         myToolbar.setTitle("HealthScope v1.0");
-        myToolbar.setTitleTextColor(Color.BLUE);
+        myToolbar.setTitleTextColor(Color.GRAY);
 
         linearLayout = findViewById(R.id.fragmentLinearLayout);
+        settingsFragment = new SettingsFragment();
         fragmentContainerView = new FragmentContainerView(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         fragmentContainerView.setId(View.generateViewId());
         linearLayout.addView(fragmentContainerView, lp);
+
         mainFragment = new MainFragment();
+        graphFragment = new GraphFragment();
 
         getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), mainFragment,"MainFragment").addToBackStack("MainFragment").commit();
     }

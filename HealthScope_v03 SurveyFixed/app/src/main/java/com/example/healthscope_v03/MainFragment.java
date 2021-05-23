@@ -39,14 +39,12 @@ public class MainFragment extends Fragment {
     BluetoothAdapter bta;                 //bluetooth stuff
     BluetoothSocket mmSocket=null;
     Double[] temperatures = new Double[72];
-    Integer  CoughNumber=0;
-    Double RiskLevel = 0.0;
     int temperatureCount = 0;
     public boolean connectionEstablished=false;
     public boolean paired = false;
+    int cough_number;
 
-
-    MutableLiveData<Boolean> risk;
+    MutableLiveData<Integer> risk;
 
     //bluetooth stuff
     BluetoothDevice mmDevice;             //bluetooth stuff
@@ -69,24 +67,35 @@ public class MainFragment extends Fragment {
         viewGraph = requireView().findViewById(R.id.viewGraph);
 
         Log.d(TAG, "onViewCreated: " + temperatureCount + temperatures.length);
-
         risk = new MutableLiveData<>();
 
-        risk.setValue(false); //Initialize with a value
+        risk.setValue(1);
 
         TextView riskView = requireView().findViewById(R.id.isSafe);
 
-        risk.observe(requireActivity(), isAtRisk -> {
-            if (isAtRisk){
-                riskView.setText("You are at Risk");
-             //   riskView.getBackground().setTint(requireActivity().getColor(R.color.red));
-            } else{
-                riskView.setText("You are Safe");
-            //    riskView.getBackground().setTint(requireActivity().getColor(R.color.green));
+        risk.observe(requireActivity(), riskSituation->{
+            if(risk.getValue()==5){
+                riskView.setText("You are at Extreme Risk");
+                riskView.getBackground().setTint(requireActivity().getColor(R.color.red));
             }
+            else if(risk.getValue()==4){
+                riskView.setText("You are at High Risk");
+                riskView.getBackground().setTint(requireActivity().getColor(R.color.white));
+            }
+            else if(risk.getValue()==3){
+                riskView.setText("You are at Medium Risk");
+                riskView.getBackground().setTint(requireActivity().getColor(R.color.purple_200));
+            }
+            else if(risk.getValue()==2){
+                riskView.setText("You are at Low Risk");
+                riskView.getBackground().setTint(requireActivity().getColor(R.color.purple_700));
+            }
+            else if(risk.getValue()==1){
+                riskView.setText("You are safe");
+                riskView.getBackground().setTint(requireActivity().getColor(R.color.green));
+            }
+
         });
-
-
         viewGraph.setOnClickListener(v1 -> Send_data("T"));
 
         Log.d(TAG, "value of: " + mmSocket);
@@ -165,7 +174,13 @@ public class MainFragment extends Fragment {
         if (my_bs == null && paired) {
             ConnectThread my_c_thread = new ConnectThread();
             new Thread(my_c_thread).start();
-            connectionEstablished = true;
+            /*
+            if(Connection established condition){
+                connectionEstablished = true;
+                Toast.makeText(getActivity(), "Connected.", Toast.LENGTH_SHORT).show();
+            }
+            */
+            connectionEstablished = true;   //Remove this if above works.
         } else if(my_bs == null && !paired){
             Toast.makeText(getActivity(), "Please pair your phone with your necklace and run the app again.", Toast.LENGTH_SHORT).show();
         } else if (connectionEstablished = true){
@@ -253,7 +268,7 @@ public class MainFragment extends Fragment {
 
         @Override
         public void run() { // Changed part !!!!!!!!!!!!!!!!!!!!!!
-            mmBuffer = new byte[100];
+            mmBuffer = new byte[74];
             // Keep listening to the InputStream until an exception occurs.
             while (true) {
                 try {
@@ -263,24 +278,35 @@ public class MainFragment extends Fragment {
                 }
                 try {
                     mmInStream.read(mmBuffer,0,74);
+
                     if(mmBuffer[0]=='T') { // TEMP DATA COMING
                         my_main_handler.postDelayed(() -> {
                             for (int i = 0; i < 72; i++) {
-                                temperatures[i] = (mmBuffer[i + 1] & 0xff)*0.0588 + 25;
+                                temperatures[i] = (mmBuffer[i] & 0xff)*0.0588 + 25;
                             }
-                            CoughNumber = mmBuffer[73] & 0xFF;
+                            cough_number = mmBuffer[72];
                             ((MainActivity) requireActivity()).startGraph();
-                        },500);
+                        },1000);
                     }
-                    else if(mmBuffer[0]=='R') { // RISK came
-                        my_main_handler.postDelayed(() ->{
-                            RiskLevel = (mmBuffer[1] & 0xFF) / 10.0;
-                        },500);
+                    else if(mmBuffer[0]=='a') { // RISK came
+                        my_main_handler.post(() -> risk.setValue(5));
 
-                        //Progress bar will be updated.
+                    }
+                    else if(mmBuffer[0]=='b') { // No-RISK came
+                        my_main_handler.post(() -> risk.setValue(4));
 
-                        //Below part will be removed.
-                        my_main_handler.post(() -> risk.setValue(true));
+                    }
+                    else if(mmBuffer[0]=='c') { // No-RISK came
+                        my_main_handler.post(() -> risk.setValue(3));
+
+                    }
+                    else if(mmBuffer[0]=='d') { // No-RISK came
+                        my_main_handler.post(() -> risk.setValue(2));
+
+                    }
+                    else if(mmBuffer[0]=='e') { // No-RISK came
+                        my_main_handler.post(() -> risk.setValue(1));
+
                     }
 
                     else if(mmBuffer[0]=='S') { // survey request

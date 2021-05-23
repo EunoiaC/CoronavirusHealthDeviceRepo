@@ -49,10 +49,11 @@ public class GraphFragment extends Fragment {
     void createTemperatureGraph() {
         temps = ((MainActivity) requireActivity()).mainFragment.temperatures;
         Collections.reverse(Arrays.asList(temps));
-
         @SuppressLint("SimpleDateFormat") SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm");
+
         tempDate = new Date(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(72));
         Log.d("TAG", "startDate: " + tempDate);
+
         graphView = requireView().findViewById(R.id.tempGraph);
         DataPoint[] values = new DataPoint[temps.length];
         ArrayList<Date> dates = new ArrayList<>();
