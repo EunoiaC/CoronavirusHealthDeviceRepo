@@ -76,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
     public void startSurvey() {
         showBackButton();
         surveyFragment = new SurveyFragment();
-        String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName();
+        String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
         Fragment f = getSupportFragmentManager().findFragmentByTag(tag);
-        if(f!=null && f==graphFragment)
-            getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(),surveyFragment,"SurveyFragment").addToBackStack("Survey Fragment").remove(graphFragment).show(surveyFragment).commit();
-        else if(f!=null && f==settingsFragment)
-            getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(),surveyFragment,"SurveyFragment").addToBackStack("Survey Fragment").remove(settingsFragment).show(surveyFragment).commit();
+        if(f!=null && graphFragment.isAdded())
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(),surveyFragment,"SurveyFragment").addToBackStack("Survey Fragment").remove(graphFragment).show(surveyFragment).commit();
+        else if(f!=null && settingsFragment.isAdded())
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(),surveyFragment,"SurveyFragment").addToBackStack("Survey Fragment").remove(settingsFragment).show(surveyFragment).commit();
         else {
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), surveyFragment, "SurveyFragment").addToBackStack("SurveyFragment").hide(mainFragment).show(surveyFragment).commit();
             invalidateOptionsMenu();
