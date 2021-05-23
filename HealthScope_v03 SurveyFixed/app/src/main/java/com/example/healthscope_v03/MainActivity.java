@@ -37,15 +37,15 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setTitleTextColor(Color.GRAY);
 
         linearLayout = findViewById(R.id.fragmentLinearLayout);
-        settingsFragment = new SettingsFragment();
+
         fragmentContainerView = new FragmentContainerView(this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         fragmentContainerView.setId(View.generateViewId());
         linearLayout.addView(fragmentContainerView, lp);
-
+        surveyFragment = new SurveyFragment();
         mainFragment = new MainFragment();
         graphFragment = new GraphFragment();
-
+        settingsFragment = new SettingsFragment();
         getSupportFragmentManager().beginTransaction().add(fragmentContainerView.getId(), mainFragment,"MainFragment").addToBackStack("MainFragment").commit();
     }
 
@@ -74,13 +74,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startSurvey() {
-        showBackButton();
-        surveyFragment = new SurveyFragment();
         String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
         Fragment f = getSupportFragmentManager().findFragmentByTag(tag);
-        if(f!=null && graphFragment.isAdded())
+        if(f!=null && surveyFragment.isVisible())
+            return;
+        showBackButton();
+        if(f!=null && graphFragment.isVisible())
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(),surveyFragment,"SurveyFragment").addToBackStack("Survey Fragment").remove(graphFragment).show(surveyFragment).commit();
-        else if(f!=null && settingsFragment.isAdded())
+        else if(f!=null && settingsFragment.isVisible())
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(),surveyFragment,"SurveyFragment").addToBackStack("Survey Fragment").remove(settingsFragment).show(surveyFragment).commit();
         else {
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), surveyFragment, "SurveyFragment").addToBackStack("SurveyFragment").hide(mainFragment).show(surveyFragment).commit();
@@ -117,15 +118,15 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24);
         toolbar.setNavigationOnClickListener(v -> {
-            String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName();
-            Fragment f = getSupportFragmentManager().findFragmentByTag(tag);
-            if(f!=null && f.equals(surveyFragment))
-                startMainKillSurvey();
-            else if(f!=null && f.equals(graphFragment))
-                startMainKillGraph();
-            else if(f!=null && f.equals(settingsFragment))
-                startMainKillSettings();
+            if(surveyFragment.isVisible())
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left).remove(surveyFragment).commit();
+            if(graphFragment.isVisible())
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left).remove(graphFragment).commit();
+            if(settingsFragment.isVisible())
+                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left).remove(settingsFragment).commit();
+            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right).show(mainFragment).commit();
             hideBackButton();
+            invalidateOptionsMenu();
         });
     }
 

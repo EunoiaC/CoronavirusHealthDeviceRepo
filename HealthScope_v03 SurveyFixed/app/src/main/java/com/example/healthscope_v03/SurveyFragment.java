@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -64,6 +65,24 @@ public class SurveyFragment extends Fragment {
             else{
                 finalAnswers[3]='0';
             }
+            q1.setCheckedOption(Question.NO_ANSWER);
+            q2.setCheckedOption(Question.NO_ANSWER);
+            q3.setCheckedOption(0);
+
+            CheckBox c = q1.findViewById(R.id.yes);
+            c.setChecked(false);
+            c = q1.findViewById(R.id.no);
+            c.setChecked(false);
+            c = q2.findViewById(R.id.yes);
+            c.setChecked(false);
+            c = q2.findViewById(R.id.no);
+            c.setChecked(false);
+            c = q3.findViewById(R.id.yes);
+            c.setChecked(false);
+            c = q3.findViewById(R.id.no);
+            c.setChecked(false);
+
+
 
             Toast.makeText(getActivity(), "Survey Completed.", Toast.LENGTH_SHORT).show();
             ((MainActivity) requireActivity()).mainFragment.Send_data(String.valueOf(finalAnswers));

@@ -311,7 +311,6 @@ public class MainFragment extends Fragment {
 
                     else if(mmBuffer[0]=='S') { // survey request
                         my_main_handler.post(() -> {
-                            if(!(((MainActivity) requireActivity()).surveyFragment.isVisible()))
                             ((MainActivity) requireActivity()).startSurvey();  // Go to the survey interface
                         });
                     }
