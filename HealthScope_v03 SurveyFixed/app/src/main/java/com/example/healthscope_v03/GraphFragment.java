@@ -44,10 +44,8 @@ public class GraphFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        coughs = requireView().findViewById(R.id.coughs);
         createTemperatureGraph();
-
-        coughs = getView().findViewById(R.id.coughs);
-
     }
 
     void createTemperatureGraph() {
@@ -92,7 +90,7 @@ public class GraphFragment extends Fragment {
         graphView.getViewport().setScalable(true);
         graphView.addSeries(series);
 
-        int coughAmount = ((MainActivity) getActivity()).mainFragment.cough_number;
+        int coughAmount = ((MainActivity) requireActivity()).mainFragment.cough_number;
 
         try {
             coughs.setText("Coughs: " + coughAmount);

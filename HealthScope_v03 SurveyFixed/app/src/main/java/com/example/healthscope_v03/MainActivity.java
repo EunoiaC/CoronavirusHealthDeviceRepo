@@ -76,12 +76,12 @@ public class MainActivity extends AppCompatActivity {
     public void startSurvey() {
         String tag = getSupportFragmentManager().getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName();
         Fragment f = getSupportFragmentManager().findFragmentByTag(tag);
-        if(f!=null && surveyFragment.isVisible())
+        if(f!=null && (surveyFragment.isVisible() || surveyFragment.isAdded()))
             return;
         showBackButton();
-        if(f!=null && graphFragment.isVisible())
+        if(f!=null && (graphFragment.isVisible() || graphFragment.isAdded()))
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(),surveyFragment,"SurveyFragment").addToBackStack("Survey Fragment").remove(graphFragment).show(surveyFragment).commit();
-        else if(f!=null && settingsFragment.isVisible())
+        else if(f!=null && (settingsFragment.isVisible() || settingsFragment.isAdded()))
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(),surveyFragment,"SurveyFragment").addToBackStack("Survey Fragment").remove(settingsFragment).show(surveyFragment).commit();
         else {
             getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left).add(fragmentContainerView.getId(), surveyFragment, "SurveyFragment").addToBackStack("SurveyFragment").hide(mainFragment).show(surveyFragment).commit();

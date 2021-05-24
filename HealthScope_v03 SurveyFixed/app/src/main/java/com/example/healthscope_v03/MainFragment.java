@@ -42,7 +42,7 @@ public class MainFragment extends Fragment {
     int temperatureCount = 0;
     public boolean connectionEstablished=false;
     public boolean paired = false;
-    int cough_number;
+    int cough_number=0;
 
     MutableLiveData<Integer> risk;
 
