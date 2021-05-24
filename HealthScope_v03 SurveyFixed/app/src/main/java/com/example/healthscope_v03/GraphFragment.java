@@ -92,6 +92,13 @@ public class GraphFragment extends Fragment {
         graphView.getViewport().setScalable(true);
         graphView.addSeries(series);
 
-        coughs.setText("Coughs: " + ((MainActivity) getActivity()).mainFragment.cough_number);
+        int coughAmount = ((MainActivity) getActivity()).mainFragment.cough_number;
+
+        try {
+            coughs.setText("Coughs: " + coughAmount);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(requireActivity(), "Error showing cough amount", Toast.LENGTH_SHORT).show();
+        }
     }
 }
