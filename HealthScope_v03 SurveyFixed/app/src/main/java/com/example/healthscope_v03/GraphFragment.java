@@ -92,6 +92,6 @@ public class GraphFragment extends Fragment {
         graphView.getViewport().setScalable(true);
         graphView.addSeries(series);
 
-        coughs.setText(((MainActivity) getActivity()).mainFragment.cough_number);
+        coughs.setText("Coughs: " + ((MainActivity) getActivity()).mainFragment.cough_number);
     }
 }
