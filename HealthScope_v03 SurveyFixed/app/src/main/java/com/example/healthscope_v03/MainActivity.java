@@ -124,9 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 startMainKillGraph();
             if(settingsFragment.isVisible())
                 startMainKillSettings();
-            //getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right).show(mainFragment).commit();
             hideBackButton();
-            invalidateOptionsMenu();
         });
     }
 
