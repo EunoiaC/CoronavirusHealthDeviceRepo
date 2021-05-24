@@ -119,12 +119,12 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24);
         toolbar.setNavigationOnClickListener(v -> {
             if(surveyFragment.isVisible())
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left).remove(surveyFragment).commit();
+                startMainKillSurvey();
             if(graphFragment.isVisible())
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left).remove(graphFragment).commit();
+                startMainKillGraph();
             if(settingsFragment.isVisible())
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_right,R.anim.slide_out_left).remove(settingsFragment).commit();
-            getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right).show(mainFragment).commit();
+                startMainKillSettings();
+            //getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right).show(mainFragment).commit();
             hideBackButton();
             invalidateOptionsMenu();
         });

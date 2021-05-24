@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ public class GraphFragment extends Fragment {
     Double[] temps;
     Date tempDate;
     GraphView graphView;
+    TextView coughs;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,6 +45,8 @@ public class GraphFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         createTemperatureGraph();
+
+        coughs = getView().findViewById(R.id.coughs);
 
     }
 
@@ -87,5 +91,7 @@ public class GraphFragment extends Fragment {
         });
         graphView.getViewport().setScalable(true);
         graphView.addSeries(series);
+
+        coughs.setText(((MainActivity) getActivity()).mainFragment.cough_number);
     }
 }
